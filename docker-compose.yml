@@ -1,0 +1,18 @@
+services:
+  mysql-ecommerce-app-container:
+    image: mysql:8.0.36-bullseye
+    container_name: mysql-ecommerce-app-container
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - mysql-config-deamond:/etc/mysql/conf.d
+    environment:
+      MYSQL_USER: tranvandat
+      MYSQL_PASSWORD: tranvandat12@
+      MYSQL_ROOT_PASSWORD: tranvandat12@
+      MYSQL_DATABASE: ecommerce_app
+
+volumes:
+  mysql-data:
+  mysql-config-deamond:
