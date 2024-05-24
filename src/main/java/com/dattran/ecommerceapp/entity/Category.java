@@ -1,5 +1,6 @@
 package com.dattran.ecommerceapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonIgnore
     String id;
 
     @Column(name = "name", nullable = false)

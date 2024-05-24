@@ -35,16 +35,19 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     @Override
     public Product createProduct(ProductDTO productDTO) {
+        if (productRepository.existsByName(productDTO.getName().trim())) {
+            throw new AppException(ResponseStatus.PRODUCT_EXISTED);
+        }
         Product product = entityMapper.toProduct(productDTO);
         Optional<Category> optionalCategory = categoryRepository.findByName(productDTO.getCategoryName());
-        Category category = optionalCategory.orElseGet(() -> categoryRepository.save(Category.builder().name(productDTO.getCategoryName()).build()));
+        Category category = optionalCategory.orElseGet(() -> categoryRepository.save(Category.builder().name(productDTO.getCategoryName().trim()).build()));
         product.setCategory(category);
         String flavors = productDTO.getFlavors();
         Ingredient ingredient = entityMapper.toIngredient(productDTO);
         StringTokenizer stringTokenizer = new StringTokenizer(flavors, ",");
         Set<Flavor> flavorSet = new HashSet<>();
         while (stringTokenizer.hasMoreTokens()) {
-            String currentFlavor = stringTokenizer.nextToken();
+            String currentFlavor = stringTokenizer.nextToken().trim();
             Optional<Flavor> optionalFlavor = flavorRepository.findByName(currentFlavor);
             Flavor flavor = optionalFlavor.orElseGet(() -> flavorRepository.save(Flavor.builder().name(currentFlavor).build()));
             flavorSet.add(flavor);

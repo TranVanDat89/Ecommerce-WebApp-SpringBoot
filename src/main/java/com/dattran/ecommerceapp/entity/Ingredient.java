@@ -1,5 +1,6 @@
 package com.dattran.ecommerceapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonIgnore
     String id;
     String brand;
     String weight;
@@ -30,7 +32,6 @@ public class Ingredient {
     @Column(name = "protein_per_serving")
     String proteinPerServing;
     String origin;
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "ingredients_flavors",
             joinColumns = {

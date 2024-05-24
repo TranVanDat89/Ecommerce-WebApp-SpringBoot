@@ -1,5 +1,6 @@
 package com.dattran.ecommerceapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,9 +19,11 @@ import java.util.Set;
 public class Flavor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonIgnore
     String id;
     @Column(name = "name", nullable = false)
     String name;
     @ManyToMany(mappedBy = "flavors", fetch = FetchType.LAZY)
+    @JsonIgnore
     Set<Ingredient> ingredients = new HashSet<>();
 }

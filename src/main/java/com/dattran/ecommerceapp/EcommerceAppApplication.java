@@ -3,13 +3,18 @@ package com.dattran.ecommerceapp;
 import com.dattran.ecommerceapp.entity.Category;
 import com.dattran.ecommerceapp.entity.Flavor;
 import com.dattran.ecommerceapp.entity.Role;
+import com.dattran.ecommerceapp.entity.User;
+import com.dattran.ecommerceapp.enumeration.ResponseStatus;
+import com.dattran.ecommerceapp.exception.AppException;
 import com.dattran.ecommerceapp.repository.CategoryRepository;
 import com.dattran.ecommerceapp.repository.FlavorRepository;
 import com.dattran.ecommerceapp.repository.RoleRepository;
+import com.dattran.ecommerceapp.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -20,11 +25,16 @@ public class EcommerceAppApplication {
 		SpringApplication.run(EcommerceAppApplication.class, args);
 	}
 	@Bean
-	public CommandLineRunner runner(RoleRepository roleRepository, FlavorRepository flavorRepository, CategoryRepository categoryRepository) {
+	public CommandLineRunner runner(PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserRepository userRepository, FlavorRepository flavorRepository, CategoryRepository categoryRepository) {
 		return args -> {
 			if (roleRepository.findByName("USER").isEmpty() && roleRepository.findByName("ADMIN").isEmpty()) {
 				List<Role> roles = List.of(Role.builder().name("USER").build(), Role.builder().name("ADMIN").build());
 				roleRepository.saveAll(roles);
+			}
+			if (!userRepository.existsByFullName("ADMIN")) {
+				Role role = roleRepository.findByName("ADMIN").orElseThrow(()->new AppException(ResponseStatus.ROLE_NOT_FOUND));
+				User user = User.builder().fullName("Admin").phoneNumber("0987822222").password(passwordEncoder.encode("@dmin")).active(true).role(role).build();
+				userRepository.save(user);
 			}
 			if (!flavorRepository.existsByName("Vanilla Ice Cream") && !flavorRepository.existsByName("Cookies & Cream")) {
 				List<Flavor> flavors = List.of(Flavor.builder().name("Vanilla Ice Cream").build(), Flavor.builder().name("Cookies & Cream").build());

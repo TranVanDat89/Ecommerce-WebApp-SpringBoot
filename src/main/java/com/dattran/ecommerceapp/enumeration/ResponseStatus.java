@@ -17,7 +17,9 @@ public enum ResponseStatus {
     PRODUCT_NOT_FOUND(404, "Product not found."),
     PRODUCT_IMAGES_OVERLOAD(405, "Cannot upload over 6 images."),
     IMAGE_SIZE_TOO_LARGE(405, "Image size must less than 10MB."),
-    UNSUPPORTED_FILE(406, "File is not image.")
+    UNSUPPORTED_FILE(406, "File is not image."),
+    ROLE_NOT_FOUND(404, "Role not found."),
+    PRODUCT_EXISTED(405, "Product existed.")
     ;
     private final int code;
     private final String message;
