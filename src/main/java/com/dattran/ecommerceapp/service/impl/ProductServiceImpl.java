@@ -58,7 +58,7 @@ public class ProductServiceImpl implements IProductService {
         product.setProductDetail(productDetail);
         return productRepository.save(product);
     }
-
+    @Transactional
     @Override
     public List<ProductImage> uploadImages(String productId, List<MultipartFile> files) {
         Product product = productRepository.findById(productId)
