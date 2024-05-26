@@ -21,6 +21,8 @@ public class Product extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     Category category;
+    @Column(name = "thumbnail", length = 300)
+    private String thumbnail;
     Integer quantity;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ingredient_id", referencedColumnName = "id")

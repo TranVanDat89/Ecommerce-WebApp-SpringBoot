@@ -40,16 +40,15 @@ public class UserServiceImpl implements IUserService {
         if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
             throw new AppException(ResponseStatus.PHONE_NUMBER_EXISTED);
         }
-        Role role;
         Role userRole = roleRepository.findByName("USER")
-                .orElseThrow();
-        if (request.getRoleId() == null) {
-            role = userRole;
-        } else {
-            role = roleRepository.findById(request.getRoleId()).orElseThrow();
-        }
+                .orElseThrow(()->new AppException(ResponseStatus.ROLE_NOT_FOUND));
+//        if (request.getRoleId() == null) {
+//            role = userRole;
+//        } else {
+//            role = roleRepository.findById(request.getRoleId()).orElseThrow();
+//        }
         User user = userMapper.toUser(request);
-        user.setRole(role);
+        user.setRole(userRole);
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userMapper.toUserResponse(userRepository.save(user));
@@ -69,7 +68,8 @@ public class UserServiceImpl implements IUserService {
                 loginRequest.getPhoneNumber(), loginRequest.getPassword(),
                 user.getAuthorities()
         );
-        //authenticationManager.authenticate(authenticationToken);
+//        Can error
+        authenticationManager.authenticate(authenticationToken);
         return jwtTokenUtil.generateToken(user);
     }
 }

@@ -20,7 +20,9 @@ public enum ResponseStatus {
     UNSUPPORTED_FILE(406, "File is not image."),
     ROLE_NOT_FOUND(404, "Role not found."),
     PRODUCT_EXISTED(405, "Product existed."),
-    ORDER_CREATED(201, "Order created successfully.")
+    ORDER_CREATED(201, "Order created successfully."),
+    GET_ALL_PRODUCTS_SUCCESSFULLY(200, "Get all product successfully."),
+    GET_ALL_CATEGORIES_SUCCESSFULLY(200, "Get all categories successfully.")
     ;
     private final int code;
     private final String message;

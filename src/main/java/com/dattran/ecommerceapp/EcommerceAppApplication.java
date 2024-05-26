@@ -36,10 +36,6 @@ public class EcommerceAppApplication {
 				User user = User.builder().fullName("Admin").phoneNumber("0987822222").password(passwordEncoder.encode("@dmin")).active(true).role(role).build();
 				userRepository.save(user);
 			}
-			if (!flavorRepository.existsByName("Vanilla Ice Cream") && !flavorRepository.existsByName("Cookies & Cream")) {
-				List<Flavor> flavors = List.of(Flavor.builder().name("Vanilla Ice Cream").build(), Flavor.builder().name("Cookies & Cream").build());
-				flavorRepository.saveAll(flavors);
-			}
 			List<Category> categories = List.of(
 					Category.builder().name("Whey protein, Vegan protein").build(),
 					Category.builder().name("Sữa mass tăng cân").build(),

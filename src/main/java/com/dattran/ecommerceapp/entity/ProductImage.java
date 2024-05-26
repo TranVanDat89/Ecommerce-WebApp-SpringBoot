@@ -23,9 +23,8 @@ public class ProductImage {
     @ManyToOne
     @JoinColumn(name = "product_id")
     @JsonIgnore
-    private Product product;
+    Product product;
 
     @Column(name = "image_url", length = 300)
-    @JsonProperty("image_url")
-    private String imageUrl;
+    String imageUrl;
 }

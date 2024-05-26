@@ -20,5 +20,4 @@ public class UserRequest {
     LocalDate dateOfBirth;
     Long facebookAccountId;
     Long googleAccountId;
-    String roleId;
 }

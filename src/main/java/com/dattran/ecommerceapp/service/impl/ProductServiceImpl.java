@@ -12,6 +12,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -82,6 +85,16 @@ public class ProductServiceImpl implements IProductService {
             ProductImage productImage = ProductImage.builder().product(product).imageUrl(path).build();
             productImages.add(productImageRepository.save(productImage));
         }
+//        Set first image of list images to thumbnail of product
+        product.setThumbnail(productImages.get(0).getImageUrl());
+        productRepository.save(product);
         return productImages;
     }
+
+    @Override
+    public Page<Product> getAllProducts(Pageable pageable) {
+        // Lấy danh sách sản phẩm theo trang (page), giới hạn (limit), và categoryId (nếu có)
+        return productRepository.findAll(pageable);
+    }
+
 }
