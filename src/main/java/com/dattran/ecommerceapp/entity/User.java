@@ -1,5 +1,6 @@
 package com.dattran.ecommerceapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -43,6 +44,15 @@ public class User extends BaseEntity implements UserDetails, Principal {
     @ManyToOne
     @JoinColumn(name = "role_id")
     Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    private List<WishList> wishLists = new ArrayList<>();
 
     @Override
     public String getName() {

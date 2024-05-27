@@ -51,9 +51,9 @@ public class ProductController {
         return httpResponse;
     }
 
-    @PostMapping(value = "/upload-images/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/upload-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public HttpResponse uploadImages(@PathVariable("id") String productId, @ModelAttribute("files") List<MultipartFile> files, HttpServletRequest httpServletRequest) {
+    public HttpResponse uploadImages(@RequestParam String productId, @ModelAttribute("files") List<MultipartFile> files, HttpServletRequest httpServletRequest) {
         List<ProductImage> productImages = productService.uploadImages(productId, files);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
@@ -67,17 +67,31 @@ public class ProductController {
         return httpResponse;
     }
 
+//    @GetMapping("")
+//    public HttpResponse getAllProducts(
+//            @RequestParam(defaultValue = "1") int page,
+//            @RequestParam(defaultValue = "9") int limit, HttpServletRequest httpServletRequest
+//    ) {
+//        PageRequest pageRequest = PageRequest.of(
+//                page-1, limit,
+//                Sort.by("createdAt").descending()
+//        );
+//        Page<Product> products = productService.getAllProducts(pageRequest);
+//        List<Product> productList = products.stream().toList();
+//        HttpResponse httpResponse = HttpResponse.builder()
+//                .timeStamp(LocalDateTime.now().toString())
+//                .path(httpServletRequest.getRequestURI())
+//                .requestMethod(httpServletRequest.getMethod())
+//                .status(HttpStatus.OK)
+//                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
+//                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+//                .data(Map.of("products", productList, "totalPages", products.getTotalPages()))
+//                .build();
+//        return httpResponse;
+//    }
     @GetMapping("")
-    public HttpResponse getAllProducts(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "9") int limit, HttpServletRequest httpServletRequest
-    ) {
-        PageRequest pageRequest = PageRequest.of(
-                page-1, limit,
-                Sort.by("createdAt").descending()
-        );
-        Page<Product> products = productService.getAllProducts(pageRequest);
-        List<Product> productList = products.stream().toList();
+    public HttpResponse getAllProducts(HttpServletRequest httpServletRequest) {
+        List<Product> products = productService.getAllProducts();
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())
@@ -85,7 +99,36 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
                 .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
-                .data(Map.of("products", productList, "totalPages", products.getTotalPages()))
+                .data(Map.of("products", products))
+                .build();
+        return httpResponse;
+    }
+    @GetMapping("/product-detail/{productId}")
+    public HttpResponse getProductById(@PathVariable String productId,HttpServletRequest httpServletRequest) {
+        Product product = productService.getProductById(productId);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("product", product))
+                .build();
+        return httpResponse;
+    }
+
+    @GetMapping("/get-top-4")
+    public HttpResponse getTop4(HttpServletRequest httpServletRequest) {
+        List<Product> products = productService.findTop4();
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("products", products))
                 .build();
         return httpResponse;
     }

@@ -72,4 +72,18 @@ public class UserServiceImpl implements IUserService {
         authenticationManager.authenticate(authenticationToken);
         return jwtTokenUtil.generateToken(user);
     }
+
+    @Override
+    public UserResponse getUserDetailsFromToken(String token) {
+        if(jwtTokenUtil.isTokenExpired(token)) {
+            throw new AppException(ResponseStatus.TOKEN_EXPIRED);
+        }
+        String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
+        Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
+        if (user.isPresent()) {
+            return userMapper.toUserResponse(user.get());
+        } else {
+            throw new AppException(ResponseStatus.USER_NOT_FOUND);
+        }
+    }
 }

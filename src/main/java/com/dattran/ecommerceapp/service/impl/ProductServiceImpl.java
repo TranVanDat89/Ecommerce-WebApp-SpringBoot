@@ -96,5 +96,19 @@ public class ProductServiceImpl implements IProductService {
         // Lấy danh sách sản phẩm theo trang (page), giới hạn (limit), và categoryId (nếu có)
         return productRepository.findAll(pageable);
     }
+    @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
 
+    @Override
+    public Product getProductById(String id) {
+        return productRepository.findById(id)
+                .orElseThrow(()->new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
+    }
+
+    @Override
+    public List<Product> findTop4() {
+        return productRepository.findTop4ByOrderByCreatedAtDesc();
+    }
 }

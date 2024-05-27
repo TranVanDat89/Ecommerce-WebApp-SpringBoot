@@ -14,4 +14,7 @@ public interface IProductService {
     Product createProduct(ProductDTO productDTO);
     List<ProductImage> uploadImages(String productId, List<MultipartFile> files);
     Page<Product> getAllProducts(Pageable pageable);
+    List<Product> getAllProducts();
+    Product getProductById(String id);
+    List<Product> findTop4();
 }

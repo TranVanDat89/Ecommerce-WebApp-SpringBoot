@@ -22,7 +22,8 @@ public enum ResponseStatus {
     PRODUCT_EXISTED(405, "Product existed."),
     ORDER_CREATED(201, "Order created successfully."),
     GET_ALL_PRODUCTS_SUCCESSFULLY(200, "Get all product successfully."),
-    GET_ALL_CATEGORIES_SUCCESSFULLY(200, "Get all categories successfully.")
+    GET_ALL_CATEGORIES_SUCCESSFULLY(200, "Get all categories successfully."),
+    TOKEN_EXPIRED(406, "Token is expired.")
     ;
     private final int code;
     private final String message;

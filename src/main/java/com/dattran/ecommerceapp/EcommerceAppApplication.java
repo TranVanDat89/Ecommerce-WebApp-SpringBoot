@@ -33,7 +33,7 @@ public class EcommerceAppApplication {
 			}
 			if (!userRepository.existsByFullName("ADMIN")) {
 				Role role = roleRepository.findByName("ADMIN").orElseThrow(()->new AppException(ResponseStatus.ROLE_NOT_FOUND));
-				User user = User.builder().fullName("Admin").phoneNumber("0987822222").password(passwordEncoder.encode("@dmin")).active(true).role(role).build();
+				User user = User.builder().fullName("Admin").phoneNumber("0987822222").password(passwordEncoder.encode("@Admin123")).active(true).role(role).build();
 				userRepository.save(user);
 			}
 			List<Category> categories = List.of(

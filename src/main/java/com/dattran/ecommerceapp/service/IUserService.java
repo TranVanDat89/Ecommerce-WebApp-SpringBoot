@@ -8,4 +8,5 @@ import com.dattran.ecommerceapp.entity.User;
 public interface IUserService {
     public UserResponse createUser(UserRequest request);
     public String authenticate(LoginRequest loginRequest);
+    UserResponse getUserDetailsFromToken(String token);
 }
