@@ -3,6 +3,7 @@ package com.dattran.ecommerceapp.service;
 import com.dattran.ecommerceapp.dto.ProductDTO;
 import com.dattran.ecommerceapp.entity.Product;
 import com.dattran.ecommerceapp.entity.ProductImage;
+import com.dattran.ecommerceapp.entity.WishList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,6 @@ public interface IProductService {
     List<Product> getAllProducts();
     Product getProductById(String id);
     List<Product> findTop4();
+    WishList addToWishList(String userId, String productId);
+    List<WishList> getAllFavorites(String userId);
 }

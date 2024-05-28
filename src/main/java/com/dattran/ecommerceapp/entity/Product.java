@@ -47,7 +47,6 @@ public class Product extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
+            cascade = CascadeType.ALL)
     private List<WishList> wishLists = new ArrayList<>();
 }

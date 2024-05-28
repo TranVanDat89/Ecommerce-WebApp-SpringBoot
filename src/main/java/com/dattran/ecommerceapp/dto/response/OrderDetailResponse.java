@@ -1,11 +1,13 @@
 package com.dattran.ecommerceapp.dto.response;
 
+import com.dattran.ecommerceapp.entity.Order;
+import com.dattran.ecommerceapp.entity.OrderDetail;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,12 +16,8 @@ import java.time.LocalDate;
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-    String id;
-    String fullName;
-    String address;
-    String phoneNumber;
-    LocalDate dateOfBirth;
-    String role;
-    Boolean active;
+public class OrderDetailResponse {
+    Order order;
+    List<DetailResponse> detailResponses;
 }
+

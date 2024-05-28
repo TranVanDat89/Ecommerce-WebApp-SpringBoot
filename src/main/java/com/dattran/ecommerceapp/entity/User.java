@@ -50,8 +50,7 @@ public class User extends BaseEntity implements UserDetails, Principal {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
+            cascade = CascadeType.ALL)
     private List<WishList> wishLists = new ArrayList<>();
 
     @Override

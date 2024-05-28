@@ -1,11 +1,14 @@
 package com.dattran.ecommerceapp.controller;
 
+import com.dattran.ecommerceapp.dto.CommentDTO;
 import com.dattran.ecommerceapp.dto.ProductDTO;
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
-import com.dattran.ecommerceapp.entity.Product;
-import com.dattran.ecommerceapp.entity.ProductImage;
+import com.dattran.ecommerceapp.entity.*;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
+import com.dattran.ecommerceapp.exception.AppException;
+import com.dattran.ecommerceapp.service.ICommentService;
 import com.dattran.ecommerceapp.service.IProductService;
+import com.dattran.ecommerceapp.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -26,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,6 +38,8 @@ import java.util.Map;
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     IProductService productService;
+    ICommentService commentService;
+    SecurityUtil securityUtil;
 
     @PostMapping("/create-product")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -117,6 +123,25 @@ public class ProductController {
                 .build();
         return httpResponse;
     }
+    @PostMapping("/product-detail")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public HttpResponse createComment(@RequestBody @Valid CommentDTO commentDTO, HttpServletRequest httpServletRequest) {
+        User loginUser = securityUtil.getLoggedInUserInfor();
+        if(!Objects.equals(loginUser.getId(), commentDTO.getUserId())) {
+            throw new AppException(ResponseStatus.USER_NOT_FOUND);
+        }
+        Comment comment = commentService.createComment(commentDTO);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.CREATED)
+                .statusCode(ResponseStatus.USER_CREATED.getCode())
+                .message(ResponseStatus.USER_CREATED.getMessage())
+                .data(Map.of("comment", comment))
+                .build();
+        return httpResponse;
+    }
 
     @GetMapping("/get-top-4")
     public HttpResponse getTop4(HttpServletRequest httpServletRequest) {
@@ -129,6 +154,23 @@ public class ProductController {
                 .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
                 .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
                 .data(Map.of("products", products))
+                .build();
+        return httpResponse;
+    }
+
+    @PostMapping("/add-to-wish-list/{productId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public HttpResponse addToWishList(@PathVariable String productId, HttpServletRequest httpServletRequest) throws Exception {
+        User loggedUser = securityUtil.getLoggedInUserInfor();
+        WishList wishList = productService.addToWishList(loggedUser.getId(), productId);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.WISH_LIST_CREATED.getCode())
+                .message(ResponseStatus.WISH_LIST_CREATED.getMessage())
+                .data(Map.of("favorites", wishList))
                 .build();
         return httpResponse;
     }

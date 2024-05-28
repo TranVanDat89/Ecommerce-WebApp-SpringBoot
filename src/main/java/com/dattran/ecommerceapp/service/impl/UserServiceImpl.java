@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 
 @Service
@@ -42,14 +44,15 @@ public class UserServiceImpl implements IUserService {
         }
         Role userRole = roleRepository.findByName("USER")
                 .orElseThrow(()->new AppException(ResponseStatus.ROLE_NOT_FOUND));
-//        if (request.getRoleId() == null) {
-//            role = userRole;
-//        } else {
-//            role = roleRepository.findById(request.getRoleId()).orElseThrow();
-//        }
         User user = userMapper.toUser(request);
         user.setRole(userRole);
         user.setActive(true);
+        if (user.getDateOfBirth() == null) {
+            user.setDateOfBirth(LocalDate.now().minusYears(18));
+        }
+        if (user.getAddress() == null) {
+            user.setAddress("Việt Nam");
+        }
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -81,7 +84,8 @@ public class UserServiceImpl implements IUserService {
         String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
         Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
         if (user.isPresent()) {
-            return userMapper.toUserResponse(user.get());
+            UserResponse userResponse = userMapper.toUserResponse(user.get());
+            return userResponse;
         } else {
             throw new AppException(ResponseStatus.USER_NOT_FOUND);
         }

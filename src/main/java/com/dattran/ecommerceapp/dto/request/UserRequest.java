@@ -1,5 +1,6 @@
 package com.dattran.ecommerceapp.dto.request;
 
+import com.dattran.ecommerceapp.custom.Password;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
@@ -16,6 +17,7 @@ public class UserRequest {
     String fullName;
     String address;
     String phoneNumber;
+    @Password
     String password;
     LocalDate dateOfBirth;
     Long facebookAccountId;

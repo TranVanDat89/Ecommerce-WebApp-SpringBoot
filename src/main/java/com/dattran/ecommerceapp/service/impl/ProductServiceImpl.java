@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,8 +29,10 @@ public class ProductServiceImpl implements IProductService {
     ProductRepository productRepository;
     CategoryRepository categoryRepository;
     FlavorRepository flavorRepository;
+    UserRepository userRepository;
     EntityMapper entityMapper;
     ProductImageRepository productImageRepository;
+    WishListRepository wishListRepository;
     S3Service s3Service;
     @Transactional
     @Override
@@ -110,5 +109,29 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<Product> findTop4() {
         return productRepository.findTop4ByOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public WishList addToWishList(String userId, String productId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(()->new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
+        if (wishListRepository.existsByUserIdAndProductId(userId, productId)) {
+            throw new AppException(ResponseStatus.PRODUCT_ALREADY_EXIST_IN_WISHLIST);
+        }
+        WishList wishList = WishList.builder()
+                .user(user)
+                .product(product)
+                .build();
+        return wishListRepository.save(wishList);
+    }
+
+    @Override
+    public List<WishList> getAllFavorites(String userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new AppException(ResponseStatus.USER_NOT_FOUND);
+        }
+        return wishListRepository.findByUserId(userId);
     }
 }

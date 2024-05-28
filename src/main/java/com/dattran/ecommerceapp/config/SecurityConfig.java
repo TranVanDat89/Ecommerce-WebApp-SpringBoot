@@ -41,7 +41,7 @@ public class SecurityConfig {
             "/api/v1/categories",
             "api/v1/products/product-detail/**",
             "/api/v1/products/get-top-4",
-            "/api/v1/users/auth/details"
+            "/api/v1/users/auth/details",
     };
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/comments/**").permitAll()
                                 .anyRequest().authenticated());
         http.cors(httpSecurityCorsConfigurer -> {
             CorsConfiguration configuration = new CorsConfiguration();

@@ -64,16 +64,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
     private boolean isBypassToken(@NonNull HttpServletRequest httpServletRequest) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
-                Pair.of(String.format("%s/roles", apiPrefix), "GET"),
-                Pair.of(String.format("%s/products", apiPrefix), "GET"),
-                Pair.of(String.format("%s/categories", apiPrefix), "GET"),
-                Pair.of(String.format("%s/users/auth/register", apiPrefix), "POST"),
-                Pair.of(String.format("%s/users/auth/login", apiPrefix), "POST")
+                Pair.of(String.format("/%s/comments", apiPrefix), "GET"),
+                Pair.of(String.format("/%s/roles", apiPrefix), "GET"),
+                Pair.of(String.format("/%s/products", apiPrefix), "GET"),
+                Pair.of(String.format("/%s/products/get-top-4", apiPrefix), "GET"),
+                Pair.of(String.format("/%s/products/product-detail/**", apiPrefix), "GET"),
+                Pair.of(String.format("/%s/categories", apiPrefix), "GET"),
+                Pair.of(String.format("/%s/users/auth/register", apiPrefix), "POST"),
+                Pair.of(String.format("/%s/users/auth/login", apiPrefix), "POST")
         );
         String requestPath = httpServletRequest.getServletPath();
         String requestMethod = httpServletRequest.getMethod();
         for (Pair<String, String> bypassToken : bypassTokens) {
-            if (requestPath.contains(bypassToken.getFirst())
+            if (requestPath.contains("/api/v1/products/product-detail")) {
+                return true;
+            }
+            if (requestPath.equals(bypassToken.getFirst())
                     && requestMethod.equals(bypassToken.getSecond())) {
                 return true;
             }

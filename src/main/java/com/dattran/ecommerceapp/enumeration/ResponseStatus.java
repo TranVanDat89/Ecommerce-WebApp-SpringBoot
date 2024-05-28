@@ -23,7 +23,15 @@ public enum ResponseStatus {
     ORDER_CREATED(201, "Order created successfully."),
     GET_ALL_PRODUCTS_SUCCESSFULLY(200, "Get all product successfully."),
     GET_ALL_CATEGORIES_SUCCESSFULLY(200, "Get all categories successfully."),
-    TOKEN_EXPIRED(406, "Token is expired.")
+    TOKEN_EXPIRED(406, "Token is expired."),
+    GET_COMMENTS_SUCCESSFULLY(200, "Get all comments successfully."),
+    COMMENT_CREATED_FAILED(406, "Comment created failed, you must buy this product to comment."),
+    COMMENT_ONLY_ONE(407, "You can comment only one time."),
+    PRODUCT_ALREADY_EXIST_IN_WISHLIST(407, "Product already exists in wish list."),
+    WISH_LIST_CREATED(201, "Wish list created successfully."),
+    ORDER_NOT_FOUND(404, "Order not found."),
+    ORDER_DETAIL_NOT_FOUND(404, "Order detail not found."),
+    GET_ORDER_DETAIL_SUCCESSFULLY(200, "Get order detail successfully."),
     ;
     private final int code;
     private final String message;
