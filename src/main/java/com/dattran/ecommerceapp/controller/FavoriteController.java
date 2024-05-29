@@ -1,6 +1,7 @@
 package com.dattran.ecommerceapp.controller;
 
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
+import com.dattran.ecommerceapp.dto.response.WishListResponse;
 import com.dattran.ecommerceapp.entity.User;
 import com.dattran.ecommerceapp.entity.WishList;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
@@ -30,7 +31,8 @@ public class FavoriteController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse getAllFavorites(HttpServletRequest httpServletRequest) throws Exception {
         User loggedUser = securityUtil.getLoggedInUserInfor();
-        List<WishList> wishLists = productService.getAllFavorites(loggedUser.getId());
+        List<WishListResponse> wishLists = productService.getAllFavorites(loggedUser.getId());
+//        List<WishList> wishLists = productService.getAllFavoriteProducts(loggedUser.getId());
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())

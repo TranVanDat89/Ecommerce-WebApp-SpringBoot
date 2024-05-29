@@ -2,6 +2,7 @@ package com.dattran.ecommerceapp.service.impl;
 
 import com.dattran.ecommerceapp.aws.S3Service;
 import com.dattran.ecommerceapp.dto.ProductDTO;
+import com.dattran.ecommerceapp.dto.response.WishListResponse;
 import com.dattran.ecommerceapp.entity.*;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.exception.AppException;
@@ -128,7 +129,26 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<WishList> getAllFavorites(String userId) {
+    public List<WishListResponse> getAllFavorites(String userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new AppException(ResponseStatus.USER_NOT_FOUND);
+        }
+        List<WishList> wishLists = wishListRepository.findByUserId(userId);
+        List<WishListResponse> wishListResponses = new ArrayList<>();
+        wishLists.forEach(
+                wishList -> {
+                    WishListResponse wishListResponse = WishListResponse.builder()
+                            .id(wishList.getId())
+                            .product(wishList.getProduct())
+                            .build();
+                    wishListResponses.add(wishListResponse);
+                }
+        );
+        return wishListResponses;
+    }
+
+    @Override
+    public List<WishList> getAllFavoriteProducts(String userId) {
         if (!userRepository.existsById(userId)) {
             throw new AppException(ResponseStatus.USER_NOT_FOUND);
         }

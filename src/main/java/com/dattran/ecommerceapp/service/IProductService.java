@@ -1,6 +1,7 @@
 package com.dattran.ecommerceapp.service;
 
 import com.dattran.ecommerceapp.dto.ProductDTO;
+import com.dattran.ecommerceapp.dto.response.WishListResponse;
 import com.dattran.ecommerceapp.entity.Product;
 import com.dattran.ecommerceapp.entity.ProductImage;
 import com.dattran.ecommerceapp.entity.WishList;
@@ -19,5 +20,6 @@ public interface IProductService {
     Product getProductById(String id);
     List<Product> findTop4();
     WishList addToWishList(String userId, String productId);
-    List<WishList> getAllFavorites(String userId);
+    List<WishListResponse> getAllFavorites(String userId);
+    List<WishList> getAllFavoriteProducts(String userId);
 }

@@ -1,6 +1,7 @@
 package com.dattran.ecommerceapp.service.impl;
 
 import com.dattran.ecommerceapp.dto.CommentDTO;
+import com.dattran.ecommerceapp.dto.response.CommentResponse;
 import com.dattran.ecommerceapp.entity.Comment;
 import com.dattran.ecommerceapp.entity.OrderDetail;
 import com.dattran.ecommerceapp.entity.Product;
@@ -17,8 +18,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,5 +59,20 @@ public class CommentServiceImpl implements ICommentService {
                 .star(commentDTO.getStar())
                 .build();
         return commentRepository.save(comment);
+    }
+
+    @Override
+    public List<CommentResponse> getAllCommentWithStarGreaterThan(int star) {
+        List<Comment> comments = commentRepository.findByStarGreaterThan(star);
+        return comments.stream()
+                .map(comment -> CommentResponse.builder()
+                        .id(comment.getId())
+                        .fullName(comment.getUser().getFullName())
+                        .createdAt(comment.getCreatedAt().toString())
+                        .updatedAt(comment.getUpdatedAt().toString())
+                        .star(comment.getStar())
+                        .content(comment.getContent())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

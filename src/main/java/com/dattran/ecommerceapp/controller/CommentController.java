@@ -1,6 +1,7 @@
 package com.dattran.ecommerceapp.controller;
 
 import com.dattran.ecommerceapp.dto.CommentDTO;
+import com.dattran.ecommerceapp.dto.response.CommentResponse;
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
 import com.dattran.ecommerceapp.entity.Comment;
 import com.dattran.ecommerceapp.entity.User;
@@ -38,6 +39,21 @@ public class CommentController {
                 .path(httpServletRequest.getRequestURI())
                 .requestMethod(httpServletRequest.getMethod())
                 .status(HttpStatus.CREATED)
+                .statusCode(ResponseStatus.GET_COMMENTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_COMMENTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("comments", comments))
+                .build();
+        return httpResponse;
+    }
+
+    @GetMapping("/all")
+    public HttpResponse getAllComments(HttpServletRequest httpServletRequest) {
+        List<CommentResponse> comments = commentService.getAllCommentWithStarGreaterThan(3);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
                 .statusCode(ResponseStatus.GET_COMMENTS_SUCCESSFULLY.getCode())
                 .message(ResponseStatus.GET_COMMENTS_SUCCESSFULLY.getMessage())
                 .data(Map.of("comments", comments))
