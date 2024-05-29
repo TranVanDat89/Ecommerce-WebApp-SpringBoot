@@ -18,7 +18,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -73,6 +75,22 @@ public class UserController {
                 .statusCode(ResponseStatus.LOGIN_SUCCESSFULLY.getCode())
                 .status(HttpStatus.OK)
                 .data(Map.of("userResponse", userResponse))
+                .build();
+        return httpResponse;
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public HttpResponse getAllUsers(HttpServletRequest httpServletRequest) {
+        List<UserResponse> userResponses = userService.getAllUsers();
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .message(ResponseStatus.GET_USERS_SUCCESS.getMessage())
+                .statusCode(ResponseStatus.GET_USERS_SUCCESS.getCode())
+                .status(HttpStatus.OK)
+                .data(Map.of("userResponses", userResponses))
                 .build();
         return httpResponse;
     }

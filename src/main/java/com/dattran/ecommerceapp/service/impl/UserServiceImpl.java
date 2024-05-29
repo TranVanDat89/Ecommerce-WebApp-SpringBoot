@@ -2,6 +2,7 @@ package com.dattran.ecommerceapp.service.impl;
 
 import com.dattran.ecommerceapp.dto.request.LoginRequest;
 import com.dattran.ecommerceapp.dto.request.UserRequest;
+import com.dattran.ecommerceapp.dto.response.CommentResponse;
 import com.dattran.ecommerceapp.dto.response.UserResponse;
 import com.dattran.ecommerceapp.entity.Role;
 import com.dattran.ecommerceapp.entity.User;
@@ -23,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalUnit;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -89,5 +92,21 @@ public class UserServiceImpl implements IUserService {
         } else {
             throw new AppException(ResponseStatus.USER_NOT_FOUND);
         }
+    }
+
+    @Override
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> UserResponse.builder()
+                        .fullName(user.getFullName())
+                        .id(user.getId())
+                        .phoneNumber(user.getPhoneNumber())
+                        .active(user.getActive())
+                        .address(user.getAddress())
+                        .dateOfBirth(user.getDateOfBirth())
+                        .role(user.getRole().getName())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

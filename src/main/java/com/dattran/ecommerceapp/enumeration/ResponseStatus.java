@@ -32,6 +32,7 @@ public enum ResponseStatus {
     ORDER_NOT_FOUND(404, "Order not found."),
     ORDER_DETAIL_NOT_FOUND(404, "Order detail not found."),
     GET_ORDER_DETAIL_SUCCESSFULLY(200, "Get order detail successfully."),
+    GET_USERS_SUCCESS(200, "Get users successfully.")
     ;
     private final int code;
     private final String message;
