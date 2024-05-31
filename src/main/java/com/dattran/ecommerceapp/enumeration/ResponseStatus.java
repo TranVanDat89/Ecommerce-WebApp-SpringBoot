@@ -32,7 +32,11 @@ public enum ResponseStatus {
     ORDER_NOT_FOUND(404, "Order not found."),
     ORDER_DETAIL_NOT_FOUND(404, "Order detail not found."),
     GET_ORDER_DETAIL_SUCCESSFULLY(200, "Get order detail successfully."),
-    GET_USERS_SUCCESS(200, "Get users successfully.")
+    GET_USERS_SUCCESS(200, "Get users successfully."),
+    ARTICLE_INVALID(408, "Content of article is empty or too short."),
+    ARTICLE_CREATED(200, "Created article successfully"),
+    GET_ALL_ARTICLE_SUCCESS(200, "Get all articles success."),
+    ARTICLE_NAME_EXISTED(405, "Article name existed.")
     ;
     private final int code;
     private final String message;
