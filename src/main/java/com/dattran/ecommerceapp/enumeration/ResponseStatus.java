@@ -36,7 +36,8 @@ public enum ResponseStatus {
     ARTICLE_INVALID(408, "Content of article is empty or too short."),
     ARTICLE_CREATED(200, "Created article successfully"),
     GET_ALL_ARTICLE_SUCCESS(200, "Get all articles success."),
-    ARTICLE_NAME_EXISTED(405, "Article name existed.")
+    ARTICLE_NAME_EXISTED(405, "Article name existed."),
+    CART_NOT_FOUND(404, "Cart not found."),
     ;
     private final int code;
     private final String message;

@@ -12,7 +12,43 @@ services:
       MYSQL_PASSWORD: tranvandat12@
       MYSQL_ROOT_PASSWORD: tranvandat12@
       MYSQL_DATABASE: ecommerce_app
+    networks:
+      - ecommerce-app-network
+  redis-container:
+    image: docker.io/redis:7.2.3
+    container_name: redis-container
+    restart: always
+    ports:
+      - "6379:6379" # Port mapping for Redis, you can change the host port as needed
+    volumes:
+      - ./redis-data:/data # Mount a volume for Redis data persistence
+    networks:
+      - ecommerce-app-network
+  ecommerce-app-spring-container:
+    container_name: ecommerce-app-spring-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+      #docker tag <image_id> shopapp-spring:1.0.0
+    ports:
+      - 8088:8088
+    environment:
+      #SPRING_DATASOURCE_URL: jdbc:mysql://mysql8-container:3306/ShopApp?serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-ecommerce-app-container:3306/ecommerce_app?serverTimezone=UTC&allowPublicKeyRetrieval=true
+      MYSQL_ROOT_PASSWORD: tranvandat12@
+      REDIS_HOST: redis-container
+      REDIS_PORT: 6379
+    #depends_on only waits for the container to start, not for the service inside the container to be fully operational
+    depends_on:
+      - mysql-ecommerce-app-container
+    networks:
+      - ecommerce-app-network
 
 volumes:
   mysql-data:
   mysql-config-deamond:
+
+networks:
+  ecommerce-app-network:
+    name: ecommerce-app-network
+    driver: bridge
