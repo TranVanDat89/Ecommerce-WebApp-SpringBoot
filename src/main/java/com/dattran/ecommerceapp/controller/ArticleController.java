@@ -26,34 +26,9 @@ import java.util.Map;
 public class ArticleController {
     IArticleService articleService;
 
-//    @PostMapping(value = "/create-article", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public HttpResponse createArticle(@RequestBody ArticleDTO articleDTO, HttpServletRequest httpServletRequest) {
-//        Article article = articleService.createArticle(articleDTO);
-//        HttpResponse httpResponse = HttpResponse.builder()
-//                .timeStamp(LocalDateTime.now().toString())
-//                .path(httpServletRequest.getRequestURI())
-//                .requestMethod(httpServletRequest.getMethod())
-//                .status(HttpStatus.OK)
-//                .statusCode(ResponseStatus.ARTICLE_CREATED.getCode())
-//                .message(ResponseStatus.ARTICLE_CREATED.getMessage())
-//                .data(Map.of("article", article))
-//                .build();
-//        return httpResponse;
-//    }
-
-    @PostMapping(value = "/create-article", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create-article")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public HttpResponse createArticle(@RequestParam("title") String title,
-                                      @RequestParam("category") String category,
-                                      @RequestParam("imageFile") MultipartFile imageFile,
-                                      @RequestParam("content") String content, HttpServletRequest httpServletRequest) {
-        ArticleDTO articleDTO = ArticleDTO.builder()
-                .title(title)
-                .category(category)
-                .imageFile(imageFile)
-                .content(content)
-                .build();
+    public HttpResponse createArticle(@ModelAttribute ArticleDTO articleDTO, HttpServletRequest httpServletRequest) {
         Article article = articleService.createArticle(articleDTO);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
@@ -66,6 +41,31 @@ public class ArticleController {
                 .build();
         return httpResponse;
     }
+
+//    @PostMapping(value = "/create-article")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public HttpResponse createArticle(@RequestParam(value = "title") String title,
+//                                      @RequestParam(value = "category") String category,
+//                                      @RequestParam(value = "imageFile", required = false) @ModelAttribute MultipartFile imageFile,
+//                                      @RequestParam(value = "content") String content, HttpServletRequest httpServletRequest) {
+//        ArticleDTO articleDTO = ArticleDTO.builder()
+//                .title(title)
+//                .category(category)
+//                .imageFile(imageFile)
+//                .content(content)
+//                .build();
+//        Article article = articleService.createArticle(articleDTO);
+//        HttpResponse httpResponse = HttpResponse.builder()
+//                .timeStamp(LocalDateTime.now().toString())
+//                .path(httpServletRequest.getRequestURI())
+//                .requestMethod(httpServletRequest.getMethod())
+//                .status(HttpStatus.OK)
+//                .statusCode(ResponseStatus.ARTICLE_CREATED.getCode())
+//                .message(ResponseStatus.ARTICLE_CREATED.getMessage())
+//                .data(Map.of("article", article))
+//                .build();
+//        return httpResponse;
+//    }
 
     @GetMapping("/all")
     public HttpResponse getAllArticles(HttpServletRequest httpServletRequest) {
