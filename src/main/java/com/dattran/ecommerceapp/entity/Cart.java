@@ -27,5 +27,6 @@ public class Cart {
     @Column(name = "total_price")
     Double totalPrice = 0.0;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Column(name = "cart_items")
     List<CartItem> cartItems = new ArrayList<>();
 }

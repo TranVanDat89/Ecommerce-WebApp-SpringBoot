@@ -17,6 +17,7 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     Integer quantity;
+    @Column(name = "flavor_name")
     String flavorName;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
