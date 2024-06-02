@@ -23,11 +23,11 @@ public class CartController {
     ICartService cartService;
     SecurityUtil securityUtil;
     @PostMapping("/add-to-cart")
-    public HttpResponse addToCart(@RequestParam(required = false) String userId, @RequestParam String sessionId,
+    public HttpResponse addToCart(@RequestParam String userId,
                                   @RequestParam String productId, @RequestParam int quantity,
                                   @RequestParam String flavorName,
                                   HttpServletRequest httpServletRequest) {
-        Cart cart = cartService.getOrCreateCart(userId, sessionId);
+        Cart cart = cartService.getOrCreateCart(userId);
         cart = cartService.addItemToCart(cart.getId(), productId, quantity, flavorName);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
@@ -42,9 +42,9 @@ public class CartController {
     }
 
     @GetMapping("/my-cart")
-    public HttpResponse getCart(@RequestParam(required = false) String userId, @RequestParam String sessionId,
+    public HttpResponse getCart(@RequestParam(required = false) String userId,
                                  HttpServletRequest httpServletRequest) {
-        Cart cart = cartService.getOrCreateCart(userId, sessionId);
+        Cart cart = cartService.getOrCreateCart(userId);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())

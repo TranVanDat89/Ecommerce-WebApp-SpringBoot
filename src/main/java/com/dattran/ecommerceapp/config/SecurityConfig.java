@@ -62,12 +62,14 @@ public class SecurityConfig {
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/comments/**").permitAll()
                                 .anyRequest().authenticated());
+        http.sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS));
         http.cors(httpSecurityCorsConfigurer -> {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(List.of("*"));
+            configuration.setAllowedOrigins(List.of("http://localhost:4200"));
             configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
             configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
             configuration.setExposedHeaders(List.of("x-auth-token"));
+            configuration.setAllowCredentials(true);
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", configuration);
             httpSecurityCorsConfigurer.configurationSource(source);

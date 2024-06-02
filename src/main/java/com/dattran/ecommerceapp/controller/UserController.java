@@ -4,7 +4,6 @@ import com.dattran.ecommerceapp.dto.request.LoginRequest;
 import com.dattran.ecommerceapp.dto.request.UserRequest;
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
 import com.dattran.ecommerceapp.dto.response.UserResponse;
-import com.dattran.ecommerceapp.entity.User;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.service.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,13 +12,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

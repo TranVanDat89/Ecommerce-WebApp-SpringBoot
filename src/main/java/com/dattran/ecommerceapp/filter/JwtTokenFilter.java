@@ -4,6 +4,7 @@ import com.dattran.ecommerceapp.entity.User;
 import com.dattran.ecommerceapp.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -43,6 +44,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
             final String token = authHeader.substring(7);
+//            String token = "";
+//            Cookie[] cookies = request.getCookies();
+//            if (cookies != null) {
+//                for (Cookie cookie : cookies) {
+//                    if (cookie.getName().equals("token")) {
+//                        token = cookie.getValue();
+//                        break;
+//                    }
+//                }
+//            }
             final String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
             if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);

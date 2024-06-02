@@ -24,8 +24,6 @@ public class Cart {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     User user;
-    @Column(name = "session_id")
-    String sessionId;
     @Column(name = "total_price")
     Double totalPrice = 0.0;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

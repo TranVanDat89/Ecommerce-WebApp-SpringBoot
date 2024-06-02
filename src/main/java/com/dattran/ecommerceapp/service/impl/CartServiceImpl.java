@@ -27,31 +27,16 @@ public class CartServiceImpl implements ICartService {
     UserRepository userRepository;
     IProductService productService;
     @Override
-    public Cart getOrCreateCart(String userId, String sessionId) {
+    public Cart getOrCreateCart(String userId) {
         Optional<Cart> optionalCart;
-        if (userId != null) {
-            User user = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                     .orElseThrow(() -> new AppException(ResponseStatus.USER_NOT_FOUND));
-            optionalCart = cartRepository.findByUserId(userId);
-            return optionalCart.orElseGet(() -> {
-                Cart cart = new Cart();
-                cart.setUser(user);
-                return cartRepository.save(cart);
-            });
-        } else {
-            optionalCart = cartRepository.findBySessionId(sessionId);
-            return optionalCart.orElseGet(() -> {
-                Cart cart = new Cart();
-                cart.setSessionId(sessionId);
-                return cartRepository.save(cart);
-            });
-        }
-//        return optionalCart.orElseGet(() -> {
-//            Cart cart = new Cart();
-//            cart.setUser(userRepository.findById(userId).get());
-//            cart.setSessionId(sessionId);
-//            return cartRepository.save(cart);
-//        });
+        optionalCart = cartRepository.findByUserId(userId);
+        return optionalCart.orElseGet(() -> {
+            Cart cart = new Cart();
+            cart.setUser(user);
+            return cartRepository.save(cart);
+        });
     }
 
     @Override
