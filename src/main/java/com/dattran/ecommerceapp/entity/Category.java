@@ -18,6 +18,6 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     String name;
 }

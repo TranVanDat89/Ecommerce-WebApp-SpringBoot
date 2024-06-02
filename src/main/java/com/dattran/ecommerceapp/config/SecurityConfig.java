@@ -1,6 +1,7 @@
 package com.dattran.ecommerceapp.config;
 
 import com.dattran.ecommerceapp.entity.Role;
+import com.dattran.ecommerceapp.filter.CorsFilter;
 import com.dattran.ecommerceapp.filter.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +36,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
+    private final CorsFilter corsFilter;
     private final String[] PUBLIC_ENDPOINTS = {
             "/api/v1/users/auth/**",
             "/api/v1/products",
@@ -47,11 +49,13 @@ public class SecurityConfig {
             "/api/v1/carts/add-to-cart",
             "/api/v1/session/id",
             "/api/v1/carts/my-cart",
+            "/api/v1/actuator/**"
     };
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+//                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth ->
                         auth
