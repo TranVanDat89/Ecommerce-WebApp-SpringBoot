@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 
 public interface IProductRedisService {
-    void clear();
-    List<Product> getAllProducts() throws JsonProcessingException;
-    void saveAll(List<Product> products) throws JsonProcessingException;
+//    void clear();
+//    List<Product> getAllProducts() throws JsonProcessingException;
+//    void saveAll(List<Product> products) throws JsonProcessingException;
 }

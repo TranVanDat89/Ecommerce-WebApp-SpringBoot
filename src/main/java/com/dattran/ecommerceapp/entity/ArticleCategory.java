@@ -5,22 +5,16 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "articles")
+@Table(name = "article_categories")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Article extends BaseEntity{
+public class ArticleCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    String title;
-    @ManyToOne
-    @JoinColumn(name = "article_category_id")
-    ArticleCategory category;
-    String imageUrl;
-    @Column(name = "content", columnDefinition = "LONGTEXT")
-    String content;
+    String name;
 }

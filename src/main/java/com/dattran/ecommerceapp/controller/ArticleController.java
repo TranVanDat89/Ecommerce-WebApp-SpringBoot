@@ -3,6 +3,7 @@ package com.dattran.ecommerceapp.controller;
 import com.dattran.ecommerceapp.dto.ArticleDTO;
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
 import com.dattran.ecommerceapp.entity.Article;
+import com.dattran.ecommerceapp.entity.ArticleCategory;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.service.IArticleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,6 +79,20 @@ public class ArticleController {
                 .statusCode(ResponseStatus.GET_ALL_ARTICLE_SUCCESS.getCode())
                 .message(ResponseStatus.GET_ALL_ARTICLE_SUCCESS.getMessage())
                 .data(Map.of("articles", articles))
+                .build();
+        return httpResponse;
+    }
+    @GetMapping("/all-article-category")
+    public HttpResponse getAllArticleCategory(HttpServletRequest httpServletRequest) {
+        List<ArticleCategory> articleCategories = articleService.getAllArticleCategories();
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_ARTICLE_CATEGORIES_SUCCESS.getCode())
+                .message(ResponseStatus.GET_ALL_ARTICLE_CATEGORIES_SUCCESS.getMessage())
+                .data(Map.of("articleCategories", articleCategories))
                 .build();
         return httpResponse;
     }

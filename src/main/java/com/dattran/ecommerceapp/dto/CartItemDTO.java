@@ -1,4 +1,6 @@
 package com.dattran.ecommerceapp.dto;
+import com.dattran.ecommerceapp.entity.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItemDTO {
-    String productId;
+    Product product;
     Integer quantity;
     String flavorName;
 }

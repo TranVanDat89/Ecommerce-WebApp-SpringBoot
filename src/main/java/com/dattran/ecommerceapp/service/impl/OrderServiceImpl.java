@@ -52,7 +52,7 @@ public class OrderServiceImpl implements IOrderService {
         for (CartItemDTO cartItemDTO : orderDTO.getCartItems()) {
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrder(order);
-            Product product = productRepository.findById(cartItemDTO.getProductId())
+            Product product = productRepository.findById(cartItemDTO.getProduct().getId())
                     .orElseThrow(() -> new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
             orderDetail.setProduct(product);
             orderDetail.setPrice(product.getPrice());

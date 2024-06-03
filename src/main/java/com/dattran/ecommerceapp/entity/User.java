@@ -48,6 +48,7 @@ public class User extends BaseEntity implements UserDetails, Principal {
     Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",

@@ -1,13 +1,16 @@
 package com.dattran.ecommerceapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name = "products")
 @Getter
@@ -17,7 +20,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(ProductListener.class)
-public class Product extends BaseEntity {
+public class Product extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -44,9 +47,11 @@ public class Product extends BaseEntity {
     private List<ProductImage> productImages;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<WishList> wishLists = new ArrayList<>();
 }

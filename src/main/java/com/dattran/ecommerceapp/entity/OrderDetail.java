@@ -22,6 +22,7 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonBackReference
     Order order;
 
     @ManyToOne

@@ -3,8 +3,10 @@ package com.dattran.ecommerceapp.service.impl;
 import com.dattran.ecommerceapp.aws.S3Service;
 import com.dattran.ecommerceapp.dto.ArticleDTO;
 import com.dattran.ecommerceapp.entity.Article;
+import com.dattran.ecommerceapp.entity.ArticleCategory;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.exception.AppException;
+import com.dattran.ecommerceapp.repository.ArticleCategoryRepository;
 import com.dattran.ecommerceapp.repository.ArticleRepository;
 import com.dattran.ecommerceapp.service.IArticleService;
 import lombok.AccessLevel;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements IArticleService {
     ArticleRepository articleRepository;
+    ArticleCategoryRepository articleCategoryRepository;
     S3Service s3Service;
     @Override
     public List<Article> getAllArticles() {
@@ -37,11 +40,13 @@ public class ArticleServiceImpl implements IArticleService {
         if (articleRepository.existsByTitle(articleDTO.getTitle())) {
             throw new AppException(ResponseStatus.ARTICLE_NAME_EXISTED);
         }
+        ArticleCategory articleCategory = articleCategoryRepository.findById(articleDTO.getArticleCategoryId())
+                .orElseThrow(()->new AppException(ResponseStatus.ARTICLE_CATEGORY_NOT_FOUND));
         Article article = Article.builder()
                 .title(articleDTO.getTitle())
-                .category(articleDTO.getCategory())
                 .content(articleDTO.getContent())
                 .imageUrl(imageUrl.isEmpty() ? null : imageUrl)
+                .category(articleCategory)
                 .build();
         return articleRepository.save(article);
     }
@@ -54,5 +59,10 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public Article updateArticle(Article article) {
         return null;
+    }
+
+    @Override
+    public List<ArticleCategory> getAllArticleCategories() {
+        return articleCategoryRepository.findAll();
     }
 }

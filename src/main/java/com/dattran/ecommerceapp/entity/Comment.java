@@ -21,9 +21,11 @@ public class Comment extends BaseEntity{
     String id;
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonBackReference
     private Product product;
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
     @Column(length = 500)
     String content;

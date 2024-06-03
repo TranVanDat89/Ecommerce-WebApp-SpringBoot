@@ -1,12 +1,14 @@
 package com.dattran.ecommerceapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -64,4 +66,7 @@ public class Order extends BaseEntity {
 
     @Column(name = "active")
     private Boolean active;//thuộc về admin
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<OrderDetail> orderDetails;
 }

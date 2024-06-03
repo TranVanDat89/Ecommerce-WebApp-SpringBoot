@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class ArticleDTO {
     String title;
-    String category;
     MultipartFile imageFile;
     String content;
+    String articleCategoryId;
 }

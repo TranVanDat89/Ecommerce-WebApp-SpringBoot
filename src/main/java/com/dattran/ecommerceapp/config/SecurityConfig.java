@@ -29,11 +29,11 @@ public class SecurityConfig {
             "/api/v1/categories",
             "/api/v1/products/product-detail/**",
             "/api/v1/products/get-top-4",
-            "/api/v1/users/auth/details",
             "/api/v1/comments/all",
             "/api/v1/articles/all",
             "/api/v1/session/id",
-            "/api/v1/actuator/**"
+            "/api/v1/actuator/**",
+            "/api/v1/articles/all-article-category"
     };
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
@@ -51,7 +51,6 @@ public class SecurityConfig {
             configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
             configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
             configuration.setExposedHeaders(List.of("x-auth-token"));
-            configuration.setAllowCredentials(true);
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", configuration);
             httpSecurityCorsConfigurer.configurationSource(source);

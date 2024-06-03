@@ -75,40 +75,40 @@ public class ProductController {
                 .build();
         return httpResponse;
     }
-    @GetMapping("")
-    public HttpResponse getAllProducts(HttpServletRequest httpServletRequest) throws JsonProcessingException {
-        List<Product> products;
-        List<Product> productsFromRedis = productRedisService.getAllProducts();
-        if (productsFromRedis != null && !productsFromRedis.isEmpty()) {
-            products = productsFromRedis;
-        } else {
-            products = productService.getAllProducts();
-            productRedisService.saveAll(products);
-        }
-        HttpResponse httpResponse = HttpResponse.builder()
-                .timeStamp(LocalDateTime.now().toString())
-                .path(httpServletRequest.getRequestURI())
-                .requestMethod(httpServletRequest.getMethod())
-                .status(HttpStatus.OK)
-                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode()).message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
-                .data(Map.of("products", products))
-                .build();
-        return httpResponse;
-    }
 //    @GetMapping("")
-//    public HttpResponse getAllProducts(HttpServletRequest httpServletRequest) {
-//        List<Product> products = productService.getAllProducts();
+//    public HttpResponse getAllProducts(HttpServletRequest httpServletRequest) throws JsonProcessingException {
+//        List<Product> products;
+//        List<Product> productsFromRedis = productRedisService.getAllProducts();
+//        if (productsFromRedis != null && !productsFromRedis.isEmpty()) {
+//            products = productsFromRedis;
+//        } else {
+//            products = productService.getAllProducts();
+//            productRedisService.saveAll(products);
+//        }
 //        HttpResponse httpResponse = HttpResponse.builder()
 //                .timeStamp(LocalDateTime.now().toString())
 //                .path(httpServletRequest.getRequestURI())
 //                .requestMethod(httpServletRequest.getMethod())
 //                .status(HttpStatus.OK)
-//                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
-//                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+//                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode()).message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
 //                .data(Map.of("products", products))
 //                .build();
 //        return httpResponse;
 //    }
+    @GetMapping("")
+    public HttpResponse getAllProducts(HttpServletRequest httpServletRequest) {
+        List<Product> products = productService.getAllProducts();
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("products", products))
+                .build();
+        return httpResponse;
+    }
     @GetMapping("/product-detail/{productId}")
     public HttpResponse getProductById(@PathVariable String productId,HttpServletRequest httpServletRequest) {
         Product product = productService.getProductById(productId);

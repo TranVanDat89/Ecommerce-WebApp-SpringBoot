@@ -2,6 +2,7 @@ package com.dattran.ecommerceapp.service.impl;
 
 import com.dattran.ecommerceapp.dto.CartDTO;
 import com.dattran.ecommerceapp.dto.CartItemDTO;
+import com.dattran.ecommerceapp.dto.request.CartUpdateRequest;
 import com.dattran.ecommerceapp.entity.Cart;
 import com.dattran.ecommerceapp.entity.CartItem;
 import com.dattran.ecommerceapp.entity.Product;
@@ -66,6 +67,27 @@ public class CartServiceImpl implements ICartService {
         Cart cartSaved = cartRepository.save(cart);
         return convertToCartDTO(cartSaved);
     }
+
+    @Override
+    public CartDTO updateCart(CartDTO cartDTO, String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ResponseStatus.USER_NOT_FOUND));
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new AppException(ResponseStatus.CART_NOT_FOUND));
+        cart.getCartItems().clear();
+        for (CartItemDTO cartItemDTO : cartDTO.getCartItems()) {
+            CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), cartItemDTO.getProduct().getId())
+                    .orElseThrow(() -> new AppException(ResponseStatus.CART_ITEM_NOT_FOUND));
+            cartItem.setQuantity(cartItemDTO.getQuantity());
+            cartItem.setFlavorName(cartItemDTO.getFlavorName());
+            cartItem.setProduct(productService.getProductById(cartItemDTO.getProduct().getId()));
+            cart.getCartItems().add(cartItem);
+        }
+        cart.setTotalPrice(getTotalPrice(cart.getCartItems()));
+        Cart cartSaved = cartRepository.save(cart);
+        return convertToCartDTO(cartSaved);
+    }
+
     private Double getTotalPrice(List<CartItem> cartItems) {
         double totalPrice = 0.0;
         for (CartItem cartItem : cartItems) {
@@ -78,7 +100,7 @@ public class CartServiceImpl implements ICartService {
     private CartDTO convertToCartDTO(Cart cart) {
         List<CartItemDTO> cartItemDTOS = cart.getCartItems().stream().map(cartItem -> {
             CartItemDTO cartItemDTO = new CartItemDTO();
-            cartItemDTO.setProductId(cartItem.getProduct().getId());
+            cartItemDTO.setProduct(cartItem.getProduct());
             cartItemDTO.setQuantity(cartItem.getQuantity());
             cartItemDTO.setFlavorName(cartItem.getFlavorName());
             return cartItemDTO;

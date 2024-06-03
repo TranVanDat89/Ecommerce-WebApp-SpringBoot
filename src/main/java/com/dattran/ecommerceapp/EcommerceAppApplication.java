@@ -1,14 +1,12 @@
 package com.dattran.ecommerceapp;
 
+import com.dattran.ecommerceapp.entity.ArticleCategory;
 import com.dattran.ecommerceapp.entity.Category;
 import com.dattran.ecommerceapp.entity.Role;
 import com.dattran.ecommerceapp.entity.User;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.exception.AppException;
-import com.dattran.ecommerceapp.repository.CategoryRepository;
-import com.dattran.ecommerceapp.repository.FlavorRepository;
-import com.dattran.ecommerceapp.repository.RoleRepository;
-import com.dattran.ecommerceapp.repository.UserRepository;
+import com.dattran.ecommerceapp.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,8 +22,15 @@ public class EcommerceAppApplication {
 		SpringApplication.run(EcommerceAppApplication.class, args);
 	}
 	@Bean
-	public CommandLineRunner runner(PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserRepository userRepository, FlavorRepository flavorRepository, CategoryRepository categoryRepository) {
+	public CommandLineRunner runner(PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserRepository userRepository, ArticleCategoryRepository articleCategoryRepository, CategoryRepository categoryRepository) {
 		return args -> {
+//			List<ArticleCategory> articleCategories = List.of(
+//					ArticleCategory.builder().name("Dinh dưỡng thể hình").build(),
+//					ArticleCategory.builder().name("Giới thiệu sản phẩm").build(),
+//					ArticleCategory.builder().name("Y học và đời sống").build(),
+//					ArticleCategory.builder().name("Chương trình tập luyện").build()
+//			);
+//			articleCategoryRepository.saveAll(articleCategories);
 			if (roleRepository.findByName("USER").isEmpty() && roleRepository.findByName("ADMIN").isEmpty()) {
 				List<Role> roles = List.of(Role.builder().name("USER").build(), Role.builder().name("ADMIN").build());
 				roleRepository.saveAll(roles);

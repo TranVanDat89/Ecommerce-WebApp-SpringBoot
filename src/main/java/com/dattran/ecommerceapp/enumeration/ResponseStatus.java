@@ -41,6 +41,10 @@ public enum ResponseStatus {
     ADD_TO_CART_SUCCESS(200, "Add to cart successfully."),
     REMOVE_FROM_CART_SUCCESS(200, "Remove from cart successfully."),
     GET_ALL_PRODUCT_FROM_REDIS_FAILED(500, "Get all product from redis failed."),
+    ARTICLE_CATEGORY_NOT_FOUND(404, "Article category not found."),
+    GET_ALL_ARTICLE_CATEGORIES_SUCCESS(200, "Get all article categories success."),
+    UPDATE_CART_SUCCESS(200, "Update cart successfully."),
+    CART_ITEM_NOT_FOUND(404, "Cart item not found."),
     ;
     private final int code;
     private final String message;
