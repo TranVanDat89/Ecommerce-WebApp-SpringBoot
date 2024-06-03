@@ -1,5 +1,6 @@
 package com.dattran.ecommerceapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,6 +23,7 @@ import java.util.List;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonIgnoreProperties("inspection")
 public class User extends BaseEntity implements UserDetails, Principal {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -46,7 +48,6 @@ public class User extends BaseEntity implements UserDetails, Principal {
     Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",

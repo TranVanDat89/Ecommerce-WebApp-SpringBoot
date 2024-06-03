@@ -44,16 +44,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
             final String token = authHeader.substring(7);
-//            String token = "";
-//            Cookie[] cookies = request.getCookies();
-//            if (cookies != null) {
-//                for (Cookie cookie : cookies) {
-//                    if (cookie.getName().equals("token")) {
-//                        token = cookie.getValue();
-//                        break;
-//                    }
-//                }
-//            }
             final String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
             if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);
@@ -84,10 +74,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("/%s/categories", apiPrefix), "GET"),
                 Pair.of(String.format("/%s/users/auth/register", apiPrefix), "POST"),
                 Pair.of(String.format("/%s/users/auth/login", apiPrefix), "POST"),
-                Pair.of(String.format("/%s/carts/add-to-cart", apiPrefix), "POST"),
                 Pair.of(String.format("/%s/articles/all", apiPrefix), "GET"),
-                Pair.of(String.format("/%s/session/id", apiPrefix), "GET"),
-                Pair.of(String.format("/%s/carts/my-cart", apiPrefix), "GET"),
                 Pair.of(String.format("/%s/actuator/health", apiPrefix), "GET")
                 );
         String requestPath = httpServletRequest.getServletPath();

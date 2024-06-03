@@ -7,8 +7,10 @@ import com.dattran.ecommerceapp.entity.*;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.exception.AppException;
 import com.dattran.ecommerceapp.service.ICommentService;
+import com.dattran.ecommerceapp.service.IProductRedisService;
 import com.dattran.ecommerceapp.service.IProductService;
 import com.dattran.ecommerceapp.util.SecurityUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -38,6 +40,7 @@ import java.util.Objects;
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     IProductService productService;
+    IProductRedisService productRedisService;
     ICommentService commentService;
     SecurityUtil securityUtil;
 
@@ -72,18 +75,29 @@ public class ProductController {
                 .build();
         return httpResponse;
     }
-
+    @GetMapping("")
+    public HttpResponse getAllProducts(HttpServletRequest httpServletRequest) throws JsonProcessingException {
+        List<Product> products;
+        List<Product> productsFromRedis = productRedisService.getAllProducts();
+        if (productsFromRedis != null && !productsFromRedis.isEmpty()) {
+            products = productsFromRedis;
+        } else {
+            products = productService.getAllProducts();
+            productRedisService.saveAll(products);
+        }
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode()).message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("products", products))
+                .build();
+        return httpResponse;
+    }
 //    @GetMapping("")
-//    public HttpResponse getAllProducts(
-//            @RequestParam(defaultValue = "1") int page,
-//            @RequestParam(defaultValue = "9") int limit, HttpServletRequest httpServletRequest
-//    ) {
-//        PageRequest pageRequest = PageRequest.of(
-//                page-1, limit,
-//                Sort.by("createdAt").descending()
-//        );
-//        Page<Product> products = productService.getAllProducts(pageRequest);
-//        List<Product> productList = products.stream().toList();
+//    public HttpResponse getAllProducts(HttpServletRequest httpServletRequest) {
+//        List<Product> products = productService.getAllProducts();
 //        HttpResponse httpResponse = HttpResponse.builder()
 //                .timeStamp(LocalDateTime.now().toString())
 //                .path(httpServletRequest.getRequestURI())
@@ -91,24 +105,10 @@ public class ProductController {
 //                .status(HttpStatus.OK)
 //                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
 //                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
-//                .data(Map.of("products", productList, "totalPages", products.getTotalPages()))
+//                .data(Map.of("products", products))
 //                .build();
 //        return httpResponse;
 //    }
-    @GetMapping("")
-    public HttpResponse getAllProducts(HttpServletRequest httpServletRequest) {
-        List<Product> products = productService.getAllProducts();
-        HttpResponse httpResponse = HttpResponse.builder()
-                .timeStamp(LocalDateTime.now().toString())
-                .path(httpServletRequest.getRequestURI())
-                .requestMethod(httpServletRequest.getMethod())
-                .status(HttpStatus.OK)
-                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
-                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
-                .data(Map.of("products", products))
-                .build();
-        return httpResponse;
-    }
     @GetMapping("/product-detail/{productId}")
     public HttpResponse getProductById(@PathVariable String productId,HttpServletRequest httpServletRequest) {
         Product product = productService.getProductById(productId);

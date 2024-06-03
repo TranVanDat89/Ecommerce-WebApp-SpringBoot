@@ -1,7 +1,9 @@
 package com.dattran.ecommerceapp.controller;
 
+import com.dattran.ecommerceapp.dto.CartDTO;
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
 import com.dattran.ecommerceapp.entity.Cart;
+import com.dattran.ecommerceapp.entity.User;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.service.ICartService;
 import com.dattran.ecommerceapp.util.SecurityUtil;
@@ -10,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -23,12 +26,34 @@ public class CartController {
     ICartService cartService;
     SecurityUtil securityUtil;
     @PostMapping("/add-to-cart")
-    public HttpResponse addToCart(@RequestParam String userId,
-                                  @RequestParam String productId, @RequestParam int quantity,
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public HttpResponse addToCart(@RequestParam String productId, @RequestParam int quantity,
                                   @RequestParam String flavorName,
                                   HttpServletRequest httpServletRequest) {
-        Cart cart = cartService.getOrCreateCart(userId);
+        User loggedUser = securityUtil.getLoggedInUserInfor();
+        String userId = null;
+        if (loggedUser != null) {
+            userId = loggedUser.getId();
+        }
+        CartDTO cart = cartService.getOrCreateCart(userId);
         cart = cartService.addItemToCart(cart.getId(), productId, quantity, flavorName);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.ADD_TO_CART_SUCCESS.getCode())
+                .message(ResponseStatus.ADD_TO_CART_SUCCESS.getMessage())
+                .data(Map.of("cart", cart))
+                .build();
+        return httpResponse;
+    }
+
+    @GetMapping("/my-cart")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public HttpResponse getCart(@RequestParam(required = false) String userId,
+                                 HttpServletRequest httpServletRequest) {
+        CartDTO cart = cartService.getOrCreateCart(userId);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())
@@ -40,19 +65,24 @@ public class CartController {
                 .build();
         return httpResponse;
     }
-
-    @GetMapping("/my-cart")
-    public HttpResponse getCart(@RequestParam(required = false) String userId,
-                                 HttpServletRequest httpServletRequest) {
-        Cart cart = cartService.getOrCreateCart(userId);
+    @GetMapping("/delete-item")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public HttpResponse deleteCartItem(@RequestParam String productId, HttpServletRequest httpServletRequest) {
+        User loggedUser = securityUtil.getLoggedInUserInfor();
+        String userId = null;
+        if (loggedUser != null) {
+            userId = loggedUser.getId();
+        }
+        CartDTO cart = cartService.getOrCreateCart(userId);
+        CartDTO cartDTO = cartService.removeItemFromCart(cart.getId(), productId);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())
                 .requestMethod(httpServletRequest.getMethod())
                 .status(HttpStatus.OK)
-                .statusCode(ResponseStatus.ARTICLE_CREATED.getCode())
-                .message(ResponseStatus.ARTICLE_CREATED.getMessage())
-                .data(Map.of("cart", cart))
+                .statusCode(ResponseStatus.REMOVE_FROM_CART_SUCCESS.getCode())
+                .message(ResponseStatus.REMOVE_FROM_CART_SUCCESS.getMessage())
+                .data(Map.of("cart", cartDTO))
                 .build();
         return httpResponse;
     }

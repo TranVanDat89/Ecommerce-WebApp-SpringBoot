@@ -2,6 +2,7 @@ package com.dattran.ecommerceapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,12 +22,10 @@ public class WishList {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonBackReference
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
     @JsonIgnore
     private User user;
 }

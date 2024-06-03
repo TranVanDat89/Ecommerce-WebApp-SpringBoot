@@ -1,7 +1,6 @@
 package com.dattran.ecommerceapp;
 
 import com.dattran.ecommerceapp.entity.Category;
-import com.dattran.ecommerceapp.entity.Flavor;
 import com.dattran.ecommerceapp.entity.Role;
 import com.dattran.ecommerceapp.entity.User;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;

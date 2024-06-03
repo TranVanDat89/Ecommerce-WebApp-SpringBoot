@@ -17,8 +17,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-  session:
-    store-type: redis
   data:
     redis:
       #spring.data.redis.use-redis-cache

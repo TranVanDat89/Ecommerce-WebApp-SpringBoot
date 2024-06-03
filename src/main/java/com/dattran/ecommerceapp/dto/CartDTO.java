@@ -3,6 +3,8 @@ package com.dattran.ecommerceapp.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -11,5 +13,8 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartDTO {
-
+    String id;
+    String userId;
+    Double totalPrice;
+    List<CartItemDTO> cartItems;
 }

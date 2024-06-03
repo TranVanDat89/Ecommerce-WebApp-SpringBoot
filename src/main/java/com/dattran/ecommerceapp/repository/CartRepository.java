@@ -7,6 +7,5 @@ import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, String> {
-    Optional<Cart> findBySessionId(String sessionId);
     Optional<Cart> findByUserId(String userId);
 }
