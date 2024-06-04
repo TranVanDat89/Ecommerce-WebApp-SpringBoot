@@ -1,9 +1,8 @@
 package com.dattran.ecommerceapp.controller;
 
 import com.dattran.ecommerceapp.dto.CartDTO;
-import com.dattran.ecommerceapp.dto.request.CartUpdateRequest;
+import com.dattran.ecommerceapp.dto.request.CartRequest;
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
-import com.dattran.ecommerceapp.entity.Cart;
 import com.dattran.ecommerceapp.entity.User;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.service.ICartService;
@@ -50,15 +49,10 @@ public class CartController {
                 .build();
         return httpResponse;
     }
-    @PostMapping("/update-cart")
+    @PostMapping("/update-cart/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    public HttpResponse updateCart(@RequestBody CartDTO cart, HttpServletRequest httpServletRequest) {
-        User loggedUser = securityUtil.getLoggedInUserInfor();
-        String userId = null;
-        if (loggedUser != null) {
-            userId = loggedUser.getId();
-        }
-        CartDTO cartChanged = cartService.updateCart(cart, userId);
+    public HttpResponse updateCart(@PathVariable("id") String cartId, @RequestBody List<CartRequest> cartUpdate, HttpServletRequest httpServletRequest) {
+        CartDTO cart = cartService.updateCart(cartUpdate, cartId);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())
@@ -66,7 +60,7 @@ public class CartController {
                 .status(HttpStatus.OK)
                 .statusCode(ResponseStatus.UPDATE_CART_SUCCESS.getCode())
                 .message(ResponseStatus.UPDATE_CART_SUCCESS.getMessage())
-                .data(Map.of("cart", cartChanged))
+                .data(Map.of("cart", cart))
                 .build();
         return httpResponse;
     }

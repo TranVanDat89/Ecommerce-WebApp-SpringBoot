@@ -96,4 +96,19 @@ public class ArticleController {
                 .build();
         return httpResponse;
     }
+    @GetMapping("/get-article/{id}")
+    public HttpResponse getArticleById(@PathVariable("id") String articleId, HttpServletRequest httpServletRequest) {
+        Article article = articleService.getArticleById(articleId);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ARTICLE_SUCCESS.getCode())
+                .message(ResponseStatus.GET_ARTICLE_SUCCESS.getMessage())
+                .data(Map.of("article", article))
+                .build();
+        return httpResponse;
+    }
+
 }

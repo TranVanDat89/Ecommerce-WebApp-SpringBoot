@@ -2,7 +2,7 @@ package com.dattran.ecommerceapp.service.impl;
 
 import com.dattran.ecommerceapp.dto.CartDTO;
 import com.dattran.ecommerceapp.dto.CartItemDTO;
-import com.dattran.ecommerceapp.dto.request.CartUpdateRequest;
+import com.dattran.ecommerceapp.dto.request.CartRequest;
 import com.dattran.ecommerceapp.entity.Cart;
 import com.dattran.ecommerceapp.entity.CartItem;
 import com.dattran.ecommerceapp.entity.Product;
@@ -69,20 +69,26 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public CartDTO updateCart(CartDTO cartDTO, String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ResponseStatus.USER_NOT_FOUND));
-        Cart cart = cartRepository.findByUserId(userId)
+    public CartDTO updateCart(List<CartRequest> cartUpdate, String cartId) {
+        Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new AppException(ResponseStatus.CART_NOT_FOUND));
-        cart.getCartItems().clear();
-        for (CartItemDTO cartItemDTO : cartDTO.getCartItems()) {
-            CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), cartItemDTO.getProduct().getId())
-                    .orElseThrow(() -> new AppException(ResponseStatus.CART_ITEM_NOT_FOUND));
-            cartItem.setQuantity(cartItemDTO.getQuantity());
-            cartItem.setFlavorName(cartItemDTO.getFlavorName());
-            cartItem.setProduct(productService.getProductById(cartItemDTO.getProduct().getId()));
-            cart.getCartItems().add(cartItem);
+        for (CartItem cartItem : cart.getCartItems()) {
+            Optional<CartRequest> optionalCartRequest = cartUpdate.stream().filter(cartRequest -> cartRequest.getProductId().equals(cartItem.getProduct().getId())).findFirst();
+            if (optionalCartRequest.isPresent()) {
+                CartRequest cartRequest = optionalCartRequest.get();
+                cartItem.setQuantity(cartRequest.getQuantity());
+                cartItem.setFlavorName(cartRequest.getFlavorName());
+            }
         }
+//        for (CartRequest cartRequest : cartUpdate) {
+//            Optional<CartItem> optionalCartItem = cart.getCartItems().stream().filter(cartItem -> cartItem.getProduct().getId().equals(cartRequest.getProductId())).findFirst();
+//            if (optionalCartItem.isPresent()) {
+//                CartItem cartItem = optionalCartItem.get();
+//                cartItem.setQuantity(cartRequest.getQuantity());
+//                cartItem.setFlavorName(cartRequest.getFlavorName());
+//                cart.getCartItems().add(cartItem);
+//            }
+//        }
         cart.setTotalPrice(getTotalPrice(cart.getCartItems()));
         Cart cartSaved = cartRepository.save(cart);
         return convertToCartDTO(cartSaved);

@@ -12,4 +12,5 @@ public interface IArticleService {
     void deleteArticle(String id);
     Article updateArticle(Article article);
     List<ArticleCategory> getAllArticleCategories();
+    Article getArticleById(String id);
 }

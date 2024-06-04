@@ -13,7 +13,10 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItemDTO {
+    @JsonProperty("product")
     Product product;
+    @JsonProperty("quantity")
     Integer quantity;
+    @JsonProperty("flavorName")
     String flavorName;
 }

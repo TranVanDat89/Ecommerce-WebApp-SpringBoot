@@ -45,6 +45,8 @@ public enum ResponseStatus {
     GET_ALL_ARTICLE_CATEGORIES_SUCCESS(200, "Get all article categories success."),
     UPDATE_CART_SUCCESS(200, "Update cart successfully."),
     CART_ITEM_NOT_FOUND(404, "Cart item not found."),
+    GET_ARTICLE_SUCCESS(200, "Get article success."),
+    ARTICLE_NOT_FOUND(404, "Article not found."),
     ;
     private final int code;
     private final String message;

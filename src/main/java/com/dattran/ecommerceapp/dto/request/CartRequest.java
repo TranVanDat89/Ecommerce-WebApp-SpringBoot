@@ -1,6 +1,5 @@
 package com.dattran.ecommerceapp.dto.request;
 
-import com.dattran.ecommerceapp.entity.Product;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
@@ -11,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CartUpdateRequest {
+public class CartRequest {
     String productId;
     Integer quantity;
     String flavorName;
