@@ -12,4 +12,5 @@ public interface CommentRepository extends JpaRepository<Comment, String> {
     boolean findByProductIdAndUserId(String productId, String userId);
     @Query("SELECT c FROM Comment c WHERE c.star > :star ORDER BY c.star DESC")
     List<Comment> findByStarGreaterThan(@Param("star") int star);
+    List<Comment> findByUserId(String userId);
 }

@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class DetailResponse{
+    String productId;
     String productThumbnail;
     String productName;
     double price;

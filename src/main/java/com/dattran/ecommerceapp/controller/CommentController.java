@@ -60,4 +60,19 @@ public class CommentController {
                 .build();
         return httpResponse;
     }
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public HttpResponse getAllCommentsByUserId(@PathVariable String userId, HttpServletRequest httpServletRequest) {
+        List<CommentDTO> comments = commentService.getAllCommentByUserId(userId);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_COMMENTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_COMMENTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("comments", comments))
+                .build();
+        return httpResponse;
+    }
 }

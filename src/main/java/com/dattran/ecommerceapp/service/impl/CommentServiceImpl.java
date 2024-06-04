@@ -75,4 +75,21 @@ public class CommentServiceImpl implements ICommentService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CommentDTO> getAllCommentByUserId(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
+        List<Comment> comments = commentRepository.findByUserId(userId);
+        List<CommentDTO> commentDTOS = new ArrayList<>();
+        for (Comment comment : comments) {
+            commentDTOS.add(CommentDTO.builder()
+                    .userId(comment.getUser().getId())
+                    .productId(comment.getProduct().getId())
+                    .content(comment.getContent())
+                    .star(comment.getStar())
+                    .build());
+        }
+        return !comments.isEmpty() ? commentDTOS : List.of();
+    }
 }

@@ -77,6 +77,9 @@ public class ArticleServiceImpl implements IArticleService {
         ArticleCategory articleCategory = articleCategoryRepository.findById(categoryId)
                 .orElseThrow(() -> new AppException(ResponseStatus.ARTICLE_CATEGORY_NOT_FOUND));
         List<Article> articles = articleRepository.findByCategoryId(categoryId);
-        return articles.isEmpty() ? articles : List.of();
+//        articles = articles.stream()
+//                .filter(article -> article.getCategory().getId().equals(categoryId))
+//                .toList();
+        return !articles.isEmpty() ? articles : List.of();
     }
 }

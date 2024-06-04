@@ -21,52 +21,54 @@ import java.util.List;
 public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
-    private User user;
+    User user;
 
     @Column(name = "fullname", length = 100)
-    private String fullName;
+    String fullName;
 
     @Column(name = "email", length = 100)
-    private String email;
+    String email;
 
     @Column(name = "phone_number",nullable = false, unique = true)
-    private String phoneNumber;
+    String phoneNumber;
 
     @Column(name = "address", length = 300)
-    private String address;
+    String address;
 
     @Column(name = "note", length = 300)
-    private String note;
+    String note;
 
+    @Column(name = "is_commented", columnDefinition = "boolean default false")
+    Boolean isCommented;
     @Column(name = "status")
-    private String status;
+    String status;
 
     @Column(name = "total_money")
-    private Double totalMoney;
+    Double totalMoney;
 
     @Column(name = "shipping_method")
-    private String shippingMethod = "";
+    String shippingMethod = "";
 
     @Column(name = "shipping_address")
-    private String shippingAddress = "";
+    String shippingAddress = "";
 
     @Column(name = "shipping_date")
-    private LocalDate shippingDate;
+    LocalDate shippingDate;
 
     @Column(name = "tracking_number")
-    private String trackingNumber;
+    String trackingNumber;
 
     @Column(name = "payment_method")
-    private String paymentMethod = "";
+    String paymentMethod = "";
 
     @Column(name = "active")
-    private Boolean active;//thuộc về admin
+    Boolean active;//thuộc về admin
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<OrderDetail> orderDetails;
+    List<OrderDetail> orderDetails;
 }

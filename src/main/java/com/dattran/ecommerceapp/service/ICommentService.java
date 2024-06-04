@@ -10,4 +10,5 @@ public interface ICommentService {
     List<Comment> getAllCommentForProducts(String productId);
     Comment createComment(CommentDTO commentDTO);
     List<CommentResponse> getAllCommentWithStarGreaterThan(int star);
+    List<CommentDTO> getAllCommentByUserId(String userId);
 }

@@ -76,6 +76,7 @@ public class OrderServiceImpl implements IOrderService {
             DetailResponse detailResponse = DetailResponse.builder()
                     .productName(orderDetail.getProduct().getName())
                     .price(orderDetail.getPrice())
+                    .productId(orderDetail.getProduct().getId())
                     .totalMoney(orderDetail.getTotalMoney())
                     .numberOfProducts(orderDetail.getNumberOfProducts())
                     .productThumbnail(orderDetail.getProduct().getThumbnail())
