@@ -31,14 +31,13 @@ public class Order extends BaseEntity {
     @Column(name = "fullname", length = 100)
     String fullName;
 
-    @Column(name = "email", length = 100)
-    String email;
-
-    @Column(name = "phone_number",nullable = false, unique = true)
+//    @Column(name = "email", length = 100)
+//    String email;
+    @Column(name = "phone_number", nullable = false)
     String phoneNumber;
 
-    @Column(name = "address", length = 300)
-    String address;
+//    @Column(name = "address", length = 300)
+//    String address;
 
     @Column(name = "note", length = 300)
     String note;

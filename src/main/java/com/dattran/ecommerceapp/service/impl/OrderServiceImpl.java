@@ -2,6 +2,7 @@ package com.dattran.ecommerceapp.service.impl;
 
 import com.dattran.ecommerceapp.dto.CartItemDTO;
 import com.dattran.ecommerceapp.dto.OrderDTO;
+import com.dattran.ecommerceapp.dto.request.CartRequest;
 import com.dattran.ecommerceapp.dto.response.DetailResponse;
 import com.dattran.ecommerceapp.dto.response.OrderDetailResponse;
 import com.dattran.ecommerceapp.entity.Order;
@@ -43,51 +44,60 @@ public class OrderServiceImpl implements IOrderService {
     public Order createOrder(OrderDTO orderDTO) {
         User user = userRepository.findById(orderDTO.getUserId())
                 .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
-        Order order = entityMapper.toOder(orderDTO);
+        Order order = new Order();
+        order.setFullName(orderDTO.getFullName());
+        order.setPhoneNumber(orderDTO.getPhoneNumber());
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING.getName());
         order.setActive(true);
+        order.setTotalMoney(orderDTO.getTotalMoney());
+        order.setShippingAddress(orderDTO.getAddress());
+        order.setShippingMethod(orderDTO.getShippingMethod());
+        order.setPaymentMethod(orderDTO.getPaymentMethod());
         order.setTrackingNumber(generateTrackingNumber(10));
         List<OrderDetail> orderDetails = new ArrayList<>();
-        for (CartItemDTO cartItemDTO : orderDTO.getCartItems()) {
+        for (CartRequest cartRequest : orderDTO.getCartItems()) {
+            Product product = productRepository.findById(cartRequest.getProductId())
+                    .orElseThrow(()->new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
             OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(order);
-            Product product = productRepository.findById(cartItemDTO.getProduct().getId())
-                    .orElseThrow(() -> new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
             orderDetail.setProduct(product);
+            orderDetail.setNumberOfProducts(cartRequest.getQuantity());
             orderDetail.setPrice(product.getPrice());
-            orderDetail.setNumberOfProducts(cartItemDTO.getQuantity());
-            orderDetail.setTotalMoney(orderDetail.getPrice()*orderDetail.getNumberOfProducts());
-            orderDetail.setFlavorName(cartItemDTO.getFlavorName());
+            orderDetail.setTotalMoney(product.getPrice() * cartRequest.getQuantity());
+            orderDetail.setOrder(order);
+            orderDetail.setFlavorName(cartRequest.getFlavorName());
             orderDetails.add(orderDetail);
         }
-        orderDetailRepository.saveAll(orderDetails);
+//        orderDetailRepository.saveAll(orderDetails);
+        order.setOrderDetails(orderDetails);
         return orderRepository.save(order);
     }
 
     @Override
-    public OrderDetailResponse getOrderDetailByUserId(String userId) {
-        Order order = orderRepository.findByUserId(userId)
-                .orElseThrow(()->new AppException(ResponseStatus.ORDER_NOT_FOUND));
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getId())
-                .orElseThrow(()->new AppException(ResponseStatus.ORDER_DETAIL_NOT_FOUND));
-        List<DetailResponse> detailResponses = new ArrayList<>();
-        orderDetails.forEach(orderDetail -> {
-            DetailResponse detailResponse = DetailResponse.builder()
-                    .productName(orderDetail.getProduct().getName())
-                    .price(orderDetail.getPrice())
-                    .productId(orderDetail.getProduct().getId())
-                    .totalMoney(orderDetail.getTotalMoney())
-                    .numberOfProducts(orderDetail.getNumberOfProducts())
-                    .productThumbnail(orderDetail.getProduct().getThumbnail())
+    public List<OrderDetailResponse> getOrderDetailByUserId(String userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
+        orders.forEach(order -> {
+            List<OrderDetail> orderDetails = order.getOrderDetails();
+            List<DetailResponse> detailResponses = new ArrayList<>();
+            orderDetails.forEach(orderDetail -> {
+                DetailResponse detailResponse = DetailResponse.builder()
+                        .productName(orderDetail.getProduct().getName())
+                        .price(orderDetail.getPrice())
+                        .productId(orderDetail.getProduct().getId())
+                        .totalMoney(orderDetail.getTotalMoney())
+                        .numberOfProducts(orderDetail.getNumberOfProducts())
+                        .productThumbnail(orderDetail.getProduct().getThumbnail())
+                        .build();
+                detailResponses.add(detailResponse);
+            });
+            OrderDetailResponse orderDetailResponse = OrderDetailResponse.builder()
+                    .order(order)
+                    .detailResponses(detailResponses)
                     .build();
-            detailResponses.add(detailResponse);
+            orderDetailResponses.add(orderDetailResponse);
         });
-        OrderDetailResponse orderDetailResponse = OrderDetailResponse.builder()
-                .order(order)
-                .detailResponses(detailResponses)
-                .build();
-        return orderDetailResponse;
+        return orderDetailResponses;
     }
     private String generateTrackingNumber(int length) {
         String characters = "0123456789";

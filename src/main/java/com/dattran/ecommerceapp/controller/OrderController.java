@@ -54,7 +54,7 @@ public class OrderController {
     @GetMapping("/order-detail/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse getOrderDetail(@PathVariable("userId") String userId, HttpServletRequest httpServletRequest) {
-        OrderDetailResponse orderDetails = orderService.getOrderDetailByUserId(userId);
+        List<OrderDetailResponse> orderDetails = orderService.getOrderDetailByUserId(userId);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())

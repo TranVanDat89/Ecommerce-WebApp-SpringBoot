@@ -49,11 +49,17 @@ public class User extends BaseEntity implements UserDetails, Principal {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Comment> comments = new ArrayList<>();
+    List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL)
-    private List<WishList> wishLists = new ArrayList<>();
+    @JsonManagedReference
+    List<WishList> wishLists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL)
+    @JsonManagedReference
+    List<Notification> notifications = new ArrayList<>();
 
     @Override
     public String getName() {

@@ -1,5 +1,6 @@
 package com.dattran.ecommerceapp.dto;
 
+import com.dattran.ecommerceapp.dto.request.CartRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -18,32 +19,16 @@ import java.util.List;
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDTO {
-    //@Min(value = 1, message = "User's ID must be > 0")
-    private String userId;
-
-    private String fullName;
-
-    private String email;
-
-    private String phoneNumber;
-
-    private String status;
-
-    private String address;
-
-    private String note;
-
+    String userId;
+    String fullName;
+    String phoneNumber;
+    String note;
     @Min(value = 0, message = "Total money must be >= 0")
-    private Double totalMoney;
-
-    private String shippingMethod;
-
-    private String shippingAddress;
-
-    private String paymentMethod;
-
+    Double totalMoney;
+    String shippingMethod;
+    String address;
+    String paymentMethod;
 //    @JsonProperty("coupon_code")
 //    private String couponCode;
-
-    private List<CartItemDTO> cartItems;
+    List<CartRequest> cartItems;
 }
