@@ -154,4 +154,15 @@ public class ProductServiceImpl implements IProductService {
         }
         return wishListRepository.findByUserId(userId);
     }
+
+    @Override
+    public List<Product> getAllProductByCategory(String categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new AppException(ResponseStatus.CATEGORY_NOT_FOUND));
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+        if (!products.isEmpty()) {
+            return products;
+        }
+        return List.of();
+    }
 }

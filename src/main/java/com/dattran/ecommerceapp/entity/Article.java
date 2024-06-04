@@ -18,7 +18,7 @@ public class Article extends BaseEntity{
     String id;
     String title;
     @ManyToOne
-    @JoinColumn(name = "article_category_id")
+    @JoinColumn(name = "category_id")
     ArticleCategory category;
     String imageUrl;
     @Column(name = "content", columnDefinition = "LONGTEXT")

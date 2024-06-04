@@ -13,4 +13,5 @@ public interface IArticleService {
     Article updateArticle(Article article);
     List<ArticleCategory> getAllArticleCategories();
     Article getArticleById(String id);
+    List<Article> getAllArticlesByCategoryId(String categoryId);
 }

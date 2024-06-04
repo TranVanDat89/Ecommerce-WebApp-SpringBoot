@@ -110,5 +110,18 @@ public class ArticleController {
                 .build();
         return httpResponse;
     }
-
+    @GetMapping("/category/{id}")
+    public HttpResponse getAllArticlesByCategoryId(@PathVariable("id") String categoryId, HttpServletRequest httpServletRequest) {
+        List<Article> articles = articleService.getAllArticlesByCategoryId(categoryId);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_ARTICLE_SUCCESS.getCode())
+                .message(ResponseStatus.GET_ALL_ARTICLE_SUCCESS.getMessage())
+                .data(Map.of("articles", articles))
+                .build();
+        return httpResponse;
+    }
 }

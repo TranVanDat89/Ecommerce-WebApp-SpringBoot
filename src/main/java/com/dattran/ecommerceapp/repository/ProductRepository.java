@@ -12,6 +12,7 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, String> {
     boolean existsByName(String name);
     List<Product> findTop4ByOrderByCreatedAtDesc();
+    List<Product> findByCategoryId(String categoryId);
 //    @Query("SELECT p FROM Product p WHERE " +
 //            "(:categoryId IS NULL OR p.category.id = :categoryId) " +
 //            "AND (:keyword IS NULL OR :keyword = '' OR p.name LIKE %:keyword%)")

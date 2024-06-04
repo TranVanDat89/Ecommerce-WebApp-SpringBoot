@@ -174,4 +174,18 @@ public class ProductController {
                 .build();
         return httpResponse;
     }
+    @GetMapping("/category/{id}")
+    public HttpResponse getAllProductsByCategory(@PathVariable("id") String categoryId,HttpServletRequest httpServletRequest) {
+        List<Product> products = productService.getAllProductByCategory(categoryId);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("products", products))
+                .build();
+        return httpResponse;
+    }
 }

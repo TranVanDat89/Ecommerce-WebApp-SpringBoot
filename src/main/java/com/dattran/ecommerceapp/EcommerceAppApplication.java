@@ -40,20 +40,19 @@ public class EcommerceAppApplication {
 				User user = User.builder().fullName("Admin").phoneNumber("0987822222").password(passwordEncoder.encode("@Admin123")).active(true).role(role).build();
 				userRepository.save(user);
 			}
-			List<Category> categories = List.of(
-					Category.builder().name("Whey protein, Vegan protein").build(),
-					Category.builder().name("Sữa mass tăng cân").build(),
-					Category.builder().name("BCAA, EAA phục hồi cơ").build(),
-					Category.builder().name("Pre-workout, Creatine").build(),
-					Category.builder().name("Phụ kiện tập luyện").build(),
-					Category.builder().name("Hỗ trợ giảm cân, yến mạch").build(),
-					Category.builder().name("Thực phẩm chức năng khác").build()
-			);
-			for (Category category : categories) {
-				if (!categoryRepository.existsByName(category.getName())) {
-					categoryRepository.save(category);
-				}
-			}
+//			List<Category> categories = List.of(
+//					Category.builder().name("Whey protein, Vegan protein").build(),
+//					Category.builder().name("Sữa mass tăng cân").build(),
+//					Category.builder().name("BCAA, EAA phục hồi cơ").build(),
+//					Category.builder().name("Pre-workout, Creatine").build(),
+//					Category.builder().name("Hỗ trợ giảm cân, yến mạch").build(),
+//					Category.builder().name("Thực phẩm chức năng khác").build()
+//			);
+//			for (Category category : categories) {
+//				if (!categoryRepository.existsByName(category.getName())) {
+//					categoryRepository.save(category);
+//				}
+//			}
 		};
 	}
 }

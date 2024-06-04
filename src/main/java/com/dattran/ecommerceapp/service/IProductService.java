@@ -22,4 +22,5 @@ public interface IProductService {
     WishList addToWishList(String userId, String productId);
     List<WishListResponse> getAllFavorites(String userId);
     List<WishList> getAllFavoriteProducts(String userId);
+    List<Product> getAllProductByCategory(String categoryId);
 }

@@ -34,7 +34,9 @@ public class SecurityConfig {
             "/api/v1/session/id",
             "/api/v1/actuator/**",
             "/api/v1/articles/all-article-category",
-            "/api/v1/articles/get-article/**"
+            "/api/v1/articles/get-article/**",
+            "/api/v1/products/category",
+            "/api/v1/articles/category",
     };
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {

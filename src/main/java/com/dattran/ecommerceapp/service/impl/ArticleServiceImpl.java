@@ -71,4 +71,12 @@ public class ArticleServiceImpl implements IArticleService {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new AppException(ResponseStatus.ARTICLE_NOT_FOUND));
     }
+
+    @Override
+    public List<Article> getAllArticlesByCategoryId(String categoryId) {
+        ArticleCategory articleCategory = articleCategoryRepository.findById(categoryId)
+                .orElseThrow(() -> new AppException(ResponseStatus.ARTICLE_CATEGORY_NOT_FOUND));
+        List<Article> articles = articleRepository.findByCategoryId(categoryId);
+        return articles.isEmpty() ? articles : List.of();
+    }
 }
