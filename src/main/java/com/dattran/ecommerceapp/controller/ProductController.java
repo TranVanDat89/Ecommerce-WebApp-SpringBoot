@@ -123,7 +123,7 @@ public class ProductController {
                 .build();
         return httpResponse;
     }
-    @PostMapping("/product-detail")
+    @PostMapping("/product-detail/comment")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse createComment(@RequestBody @Valid CommentDTO commentDTO, HttpServletRequest httpServletRequest) {
         User loginUser = securityUtil.getLoggedInUserInfor();

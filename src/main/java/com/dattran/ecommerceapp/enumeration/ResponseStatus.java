@@ -49,6 +49,7 @@ public enum ResponseStatus {
     ARTICLE_NOT_FOUND(404, "Article not found."),
     CATEGORY_NOT_FOUND(404, "Category not found."),
     UPDATE_ORDER_SUCCESSFULLY(200, "Update order successfully."),
+    GET_ALL_NOTIFICATION_SUCCESSFULLY(200, "Get all notification successfully."),
     ;
     private final int code;
     private final String message;

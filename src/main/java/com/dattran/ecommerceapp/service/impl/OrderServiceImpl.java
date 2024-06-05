@@ -1,6 +1,5 @@
 package com.dattran.ecommerceapp.service.impl;
 
-import com.dattran.ecommerceapp.dto.CartItemDTO;
 import com.dattran.ecommerceapp.dto.OrderDTO;
 import com.dattran.ecommerceapp.dto.request.CartRequest;
 import com.dattran.ecommerceapp.dto.request.OrderStatusRequest;
@@ -20,10 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -112,12 +111,14 @@ public class OrderServiceImpl implements IOrderService {
                 .orElseThrow(()->new AppException(ResponseStatus.ORDER_NOT_FOUND));
         User user = userRepository.findById(order.getUser().getId())
                         .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
+        User delivery = userRepository.findByRoleId("6b32380e-7041-41ee-aa00-bd7523e9fd0b").orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
         order.setStatus(orderStatusRequest.getStatus());
         Notification notification = Notification.builder()
                 .user(user)
                 .build();
         switch (OrderStatus.valueOf(orderStatusRequest.getStatus().toUpperCase())) {
             case SUCCESS:
+                order.setShippingDate(LocalDate.from(LocalDateTime.now()));
                    List<OrderDetail> orderDetails = order.getOrderDetails();
                    orderDetails.forEach(orderDetail -> {
                        Product product = orderDetail.getProduct();
@@ -129,7 +130,12 @@ public class OrderServiceImpl implements IOrderService {
                    break;
 
             case DELIVERING:
-                notification.setMessage(String.format("Đơn hàng %s đang trên đường giao đến bạn.", order.getId()));
+                Notification notiForDelivering = Notification.builder()
+                        .user(delivery)
+                        .message(String.format("Bạn có đơn hàng %s.", order.getId()))
+                        .build();
+                notificationRepository.save(notiForDelivering);
+                notification.setMessage(String.format("Đơn hàng %s đang trên đường giao đến bạn. Vui lòng chú ý điện thoại.", order.getId()));
                 break;
 
             case CANCELLED:

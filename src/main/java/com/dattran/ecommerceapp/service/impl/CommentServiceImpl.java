@@ -41,14 +41,17 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public Comment createComment(CommentDTO commentDTO) {
-        if (commentRepository.findByProductIdAndUserId(commentDTO.getProductId(), commentDTO.getUserId())) {
-            throw new AppException(ResponseStatus.COMMENT_ONLY_ONE);
-        }
+//        if (commentRepository.findByProductIdAndUserId(commentDTO.getProductId(), commentDTO.getUserId())) {
+//            throw new AppException(ResponseStatus.COMMENT_ONLY_ONE);
+//        }
         User user = userRepository.findById(commentDTO.getUserId())
                 .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
         Product product = productRepository.findById(commentDTO.getProductId())
                 .orElseThrow(()->new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
         OrderDetail orderDetail = orderDetailRepository.findByProductId(commentDTO.getProductId());
+        if (orderDetail.getOrder().getIsCommented()) {
+            throw new AppException(ResponseStatus.COMMENT_ONLY_ONE);
+        }
         if (!Objects.equals(orderDetail.getOrder().getUser().getId(), commentDTO.getUserId())) {
             throw new AppException(ResponseStatus.COMMENT_CREATED_FAILED);
         }
@@ -58,6 +61,8 @@ public class CommentServiceImpl implements ICommentService {
                 .content(commentDTO.getContent())
                 .star(commentDTO.getStar())
                 .build();
+        orderDetail.getOrder().setIsCommented(true);
+        orderDetailRepository.save(orderDetail);
         return commentRepository.save(comment);
     }
 
