@@ -3,20 +3,15 @@ package com.dattran.ecommerceapp.service.impl;
 import com.dattran.ecommerceapp.dto.CartItemDTO;
 import com.dattran.ecommerceapp.dto.OrderDTO;
 import com.dattran.ecommerceapp.dto.request.CartRequest;
+import com.dattran.ecommerceapp.dto.request.OrderStatusRequest;
 import com.dattran.ecommerceapp.dto.response.DetailResponse;
 import com.dattran.ecommerceapp.dto.response.OrderDetailResponse;
-import com.dattran.ecommerceapp.entity.Order;
-import com.dattran.ecommerceapp.entity.OrderDetail;
-import com.dattran.ecommerceapp.entity.Product;
-import com.dattran.ecommerceapp.entity.User;
+import com.dattran.ecommerceapp.entity.*;
 import com.dattran.ecommerceapp.enumeration.OrderStatus;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.exception.AppException;
 import com.dattran.ecommerceapp.mapper.EntityMapper;
-import com.dattran.ecommerceapp.repository.OrderDetailRepository;
-import com.dattran.ecommerceapp.repository.OrderRepository;
-import com.dattran.ecommerceapp.repository.ProductRepository;
-import com.dattran.ecommerceapp.repository.UserRepository;
+import com.dattran.ecommerceapp.repository.*;
 import com.dattran.ecommerceapp.service.IOrderService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +34,7 @@ public class OrderServiceImpl implements IOrderService {
     OrderDetailRepository orderDetailRepository;
     EntityMapper entityMapper;
     ProductRepository productRepository;
+    NotificationRepository notificationRepository;
     @Transactional
     @Override
     public Order createOrder(OrderDTO orderDTO) {
@@ -55,10 +51,13 @@ public class OrderServiceImpl implements IOrderService {
         order.setShippingMethod(orderDTO.getShippingMethod());
         order.setPaymentMethod(orderDTO.getPaymentMethod());
         order.setTrackingNumber(generateTrackingNumber(10));
+        StringBuilder message = new StringBuilder();
+        message.append("Đơn hàng của bạn gồm: ");
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (CartRequest cartRequest : orderDTO.getCartItems()) {
             Product product = productRepository.findById(cartRequest.getProductId())
                     .orElseThrow(()->new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
+            message.append(product.getName()).append(", ");
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setProduct(product);
             orderDetail.setNumberOfProducts(cartRequest.getQuantity());
@@ -70,6 +69,13 @@ public class OrderServiceImpl implements IOrderService {
         }
 //        orderDetailRepository.saveAll(orderDetails);
         order.setOrderDetails(orderDetails);
+        message.append("với mã đơn hàng ").append(order.getId())
+                .append(", tracking number: ").append(order.getTrackingNumber()).append(".");
+        Notification notification = Notification.builder()
+                .user(user)
+                .message(message.toString())
+                .build();
+        notificationRepository.save(notification);
         return orderRepository.save(order);
     }
 
@@ -99,6 +105,42 @@ public class OrderServiceImpl implements IOrderService {
         });
         return orderDetailResponses;
     }
+    @Transactional
+    @Override
+    public Order updateStatusOrder(OrderStatusRequest orderStatusRequest) {
+        Order order = orderRepository.findById(orderStatusRequest.getOrderId())
+                .orElseThrow(()->new AppException(ResponseStatus.ORDER_NOT_FOUND));
+        User user = userRepository.findById(order.getUser().getId())
+                        .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
+        order.setStatus(orderStatusRequest.getStatus());
+        Notification notification = Notification.builder()
+                .user(user)
+                .build();
+        switch (OrderStatus.valueOf(orderStatusRequest.getStatus().toUpperCase())) {
+            case SUCCESS:
+                   List<OrderDetail> orderDetails = order.getOrderDetails();
+                   orderDetails.forEach(orderDetail -> {
+                       Product product = orderDetail.getProduct();
+                       product.setSolved(product.getSolved()+orderDetail.getNumberOfProducts());
+                       product.setQuantity(product.getQuantity()-orderDetail.getNumberOfProducts());
+                       productRepository.save(product);
+                   });
+                   notification.setMessage(String.format("Đơn hàng %s đã giao thành công.", order.getId()));
+                   break;
+
+            case DELIVERING:
+                notification.setMessage(String.format("Đơn hàng %s đang trên đường giao đến bạn.", order.getId()));
+                break;
+
+            case CANCELLED:
+                order.setNote(orderStatusRequest.getNote());
+                notification.setMessage(String.format("Đơn hàng %s đã bị hủy với lí do %s.", order.getId(), order.getNote()));
+                break;
+        }
+        notificationRepository.save(notification);
+        return orderRepository.save(order);
+    }
+
     private String generateTrackingNumber(int length) {
         String characters = "0123456789";
         StringBuilder codeBuilder = new StringBuilder();

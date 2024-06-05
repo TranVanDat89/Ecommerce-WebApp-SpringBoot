@@ -2,6 +2,7 @@ package com.dattran.ecommerceapp.controller;
 
 import com.dattran.ecommerceapp.dto.OrderDTO;
 import com.dattran.ecommerceapp.dto.ProductDTO;
+import com.dattran.ecommerceapp.dto.request.OrderStatusRequest;
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
 import com.dattran.ecommerceapp.dto.response.OrderDetailResponse;
 import com.dattran.ecommerceapp.entity.Order;
@@ -66,4 +67,21 @@ public class OrderController {
                 .build();
         return httpResponse;
     }
+
+    @PostMapping("/update-status-order")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DELIVERY')")
+    public HttpResponse updateStatusOrder(@RequestBody @Valid OrderStatusRequest orderStatusRequest, HttpServletRequest httpServletRequest) {
+        Order order = orderService.updateStatusOrder(orderStatusRequest);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.CREATED)
+                .statusCode(ResponseStatus.UPDATE_ORDER_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.UPDATE_ORDER_SUCCESSFULLY.getMessage())
+                .data(Map.of("order", order))
+                .build();
+        return httpResponse;
+    }
+
 }

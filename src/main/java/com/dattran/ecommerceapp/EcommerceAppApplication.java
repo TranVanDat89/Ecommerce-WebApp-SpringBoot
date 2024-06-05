@@ -1,19 +1,11 @@
 package com.dattran.ecommerceapp;
 
-import com.dattran.ecommerceapp.entity.ArticleCategory;
-import com.dattran.ecommerceapp.entity.Category;
-import com.dattran.ecommerceapp.entity.Role;
-import com.dattran.ecommerceapp.entity.User;
-import com.dattran.ecommerceapp.enumeration.ResponseStatus;
-import com.dattran.ecommerceapp.exception.AppException;
 import com.dattran.ecommerceapp.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 
 @SpringBootApplication
 public class EcommerceAppApplication {
@@ -31,15 +23,30 @@ public class EcommerceAppApplication {
 //					ArticleCategory.builder().name("Chương trình tập luyện").build()
 //			);
 //			articleCategoryRepository.saveAll(articleCategories);
-			if (roleRepository.findByName("USER").isEmpty() && roleRepository.findByName("ADMIN").isEmpty()) {
-				List<Role> roles = List.of(Role.builder().name("USER").build(), Role.builder().name("ADMIN").build());
-				roleRepository.saveAll(roles);
-			}
-			if (!userRepository.existsByFullName("ADMIN")) {
-				Role role = roleRepository.findByName("ADMIN").orElseThrow(()->new AppException(ResponseStatus.ROLE_NOT_FOUND));
-				User user = User.builder().fullName("Admin").phoneNumber("0987822222").password(passwordEncoder.encode("@Admin123")).active(true).role(role).build();
-				userRepository.save(user);
-			}
+//			if (roleRepository.findByName("USER").isEmpty() && roleRepository.findByName("ADMIN").isEmpty()) {
+//				List<Role> roles = List.of(Role.builder().name("USER").build(), Role.builder().name("ADMIN").build());
+//				roleRepository.saveAll(roles);
+//			}
+//			if (roleRepository.findByName("DELIVERY").isEmpty()) {
+//				Role role = Role.builder().name("DELIVERY").build();
+//				roleRepository.save(role);
+//			}
+//			Role role = roleRepository.findByName("DELIVERY").orElseThrow(() -> new AppException(ResponseStatus.ROLE_NOT_FOUND));
+//			User user = User.builder()
+//					.fullName("Nguyễn Huy Hùng")
+//					.phoneNumber("0867655555")
+//					.active(true)
+//					.role(role)
+//					.address("Bình Dương, Việt Nam")
+//					.dateOfBirth(LocalDate.from(LocalDateTime.now().minusYears(25)))
+//					.password(passwordEncoder.encode("@Huyhung1208"))
+//					.build();
+//			userRepository.save(user);
+//			if (!userRepository.existsByFullName("ADMIN")) {
+//				Role role = roleRepository.findByName("ADMIN").orElseThrow(()->new AppException(ResponseStatus.ROLE_NOT_FOUND));
+//				User user = User.builder().fullName("Admin").phoneNumber("0987822222").password(passwordEncoder.encode("@Admin123")).active(true).role(role).build();
+//				userRepository.save(user);
+//			}
 //			List<Category> categories = List.of(
 //					Category.builder().name("Whey protein, Vegan protein").build(),
 //					Category.builder().name("Sữa mass tăng cân").build(),
