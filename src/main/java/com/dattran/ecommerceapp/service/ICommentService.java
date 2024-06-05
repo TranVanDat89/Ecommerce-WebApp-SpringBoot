@@ -9,6 +9,7 @@ import java.util.List;
 public interface ICommentService {
     List<Comment> getAllCommentForProducts(String productId);
     Comment createComment(CommentDTO commentDTO);
+    List<Comment> createListComment(List<CommentDTO> commentDTOS);
     List<CommentResponse> getAllCommentWithStarGreaterThan(int star);
     List<CommentDTO> getAllCommentByUserId(String userId);
 }

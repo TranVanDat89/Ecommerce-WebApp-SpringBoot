@@ -75,4 +75,19 @@ public class CommentController {
                 .build();
         return httpResponse;
     }
+
+    @PostMapping("/create-list-comment")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    HttpResponse createComments(@RequestBody List<CommentDTO> commentDTOS, HttpServletRequest httpServletRequest) {
+        List<Comment> comments = commentService.createListComment(commentDTOS);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.CREATED)
+                .statusCode(ResponseStatus.COMMENT_CREATED.getCode())
+                .message(ResponseStatus.COMMENT_CREATED.getMessage())
+                .build();
+        return httpResponse;
+    }
 }

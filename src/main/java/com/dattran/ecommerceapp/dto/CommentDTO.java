@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDTO {
+    String orderId;
     String productId;
     String userId;
     String content;

@@ -136,8 +136,8 @@ public class ProductController {
                 .path(httpServletRequest.getRequestURI())
                 .requestMethod(httpServletRequest.getMethod())
                 .status(HttpStatus.CREATED)
-                .statusCode(ResponseStatus.USER_CREATED.getCode())
-                .message(ResponseStatus.USER_CREATED.getMessage())
+                .statusCode(ResponseStatus.COMMENT_CREATED.getCode())
+                .message(ResponseStatus.COMMENT_CREATED.getMessage())
                 .data(Map.of("comment", comment))
                 .build();
         return httpResponse;

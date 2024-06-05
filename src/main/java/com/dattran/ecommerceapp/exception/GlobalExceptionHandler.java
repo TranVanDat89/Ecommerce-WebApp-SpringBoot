@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = AppException.class)
-    HttpResponse handlingAppException(AppException exception, HttpServletRequest httpServletRequest) {
-        return HttpResponse.builder()
+    ResponseEntity<HttpResponse> handlingAppException(AppException exception, HttpServletRequest httpServletRequest) {
+        HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .statusCode(exception.getResponseStatus().getCode())
                 .path(httpServletRequest.getRequestURI())
@@ -21,5 +21,6 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .message(exception.getMessage())
                 .build();
+        return ResponseEntity.badRequest().body(httpResponse);
     }
 }

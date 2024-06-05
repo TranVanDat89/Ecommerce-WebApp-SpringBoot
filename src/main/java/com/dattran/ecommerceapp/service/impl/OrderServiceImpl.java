@@ -45,6 +45,7 @@ public class OrderServiceImpl implements IOrderService {
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING.getName());
         order.setActive(true);
+        order.setIsCommented(false);
         order.setTotalMoney(orderDTO.getTotalMoney());
         order.setShippingAddress(orderDTO.getAddress());
         order.setShippingMethod(orderDTO.getShippingMethod());
