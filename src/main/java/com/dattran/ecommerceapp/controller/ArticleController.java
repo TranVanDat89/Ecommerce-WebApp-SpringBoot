@@ -27,7 +27,7 @@ import java.util.Map;
 public class ArticleController {
     IArticleService articleService;
 
-    @PostMapping(value = "/create-article")
+    @PostMapping(value = "/create-article", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public HttpResponse createArticle(@ModelAttribute ArticleDTO articleDTO, HttpServletRequest httpServletRequest) {
         Article article = articleService.createArticle(articleDTO);

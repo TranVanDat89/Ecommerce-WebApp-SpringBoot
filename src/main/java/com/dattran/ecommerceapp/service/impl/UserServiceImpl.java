@@ -25,7 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -118,7 +120,21 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public long countTotalUsersByYear(int year) {
-        return userRepository.countUsersByYear(year);
+    public Map<String, Object> countTotalUsersByYear(int year) {
+        if (year == 2023) {
+            return Map.of("totalUsers", userRepository.countUsersByYear(2023));
+        }
+        Map<String, Object> result = new HashMap<>();
+        Long totalUserNow = userRepository.countUsersByYear(year);
+        result.put("totalUsers", totalUserNow);
+        Long totalUsersPreviousYear = userRepository.countUsersByYear(year - 1) == 0 ? 1 : userRepository.countUsersByYear(year - 1);
+        if (totalUserNow > totalUsersPreviousYear) {
+            Double rate = (1 - ((double) totalUsersPreviousYear / totalUserNow))*100;
+            result.put("up", rate);
+        } else {
+            Double rate = (1 - ((double) totalUserNow / totalUsersPreviousYear))*100;
+            result.put("down", rate);
+        }
+        return result;
     }
 }

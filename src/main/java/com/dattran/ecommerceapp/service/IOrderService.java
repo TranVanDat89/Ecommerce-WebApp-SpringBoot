@@ -14,7 +14,9 @@ public interface IOrderService {
     List<OrderDetailResponse> getOrderDetailByUserId(String userId);
     Order updateStatusOrder(OrderStatusRequest orderStatusRequest);
     Double calculateOutcomeOfSuccessfulOrders(int year);
-    Long countTotalOrder();
+//    Long countTotalOrder();
     Long countOrdersByStatusAndYear(String status, int year);
+    Map<String, ?> countOrdersByYear(int year);
     Map<String, Double> getTotalMoneyByStatusAndYearGroupedByMonth(String status, int year);
+    Map<String, ?> calculateOutcomeOrders(int year);
 }

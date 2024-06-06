@@ -25,7 +25,6 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
-@EnableWebSecurity
 public class SecurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
     private final String[] PUBLIC_ENDPOINTS = {
@@ -65,7 +64,7 @@ public class SecurityConfig {
             source.registerCorsConfiguration("/**", configuration);
             httpSecurityCorsConfigurer.configurationSource(source);
         });
-        http.securityMatcher(String.valueOf(EndpointRequest.toAnyEndpoint()));
+//        http.securityMatcher(String.valueOf(EndpointRequest.toAnyEndpoint()));
         return http.build();
     }
 }

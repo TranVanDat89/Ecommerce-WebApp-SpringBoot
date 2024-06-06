@@ -46,9 +46,23 @@ public class CommentController {
         return httpResponse;
     }
 
+    @GetMapping("/all/star-greater-than-3")
+    public HttpResponse getAllCommentsWithStarGreaterThan3(HttpServletRequest httpServletRequest) {
+        List<CommentResponse> comments = commentService.getAllCommentWithStarGreaterThan(3);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_COMMENTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_COMMENTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("comments", comments))
+                .build();
+        return httpResponse;
+    }
     @GetMapping("/all")
     public HttpResponse getAllComments(HttpServletRequest httpServletRequest) {
-        List<CommentResponse> comments = commentService.getAllCommentWithStarGreaterThan(3);
+        List<CommentResponse> comments = commentService.getAllComments();
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())

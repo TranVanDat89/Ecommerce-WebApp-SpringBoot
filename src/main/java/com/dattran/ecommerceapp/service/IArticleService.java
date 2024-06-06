@@ -5,6 +5,7 @@ import com.dattran.ecommerceapp.entity.Article;
 import com.dattran.ecommerceapp.entity.ArticleCategory;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IArticleService {
     List<Article> getAllArticles();
@@ -15,5 +16,5 @@ public interface IArticleService {
     Article getArticleById(String id);
     List<Article> getAllArticlesByCategoryId(String categoryId);
     long countTotalArticles();
-    long countTotalArticlesByYear(int year);
+    Map<String, ?> countTotalArticlesByYear(int year);
 }

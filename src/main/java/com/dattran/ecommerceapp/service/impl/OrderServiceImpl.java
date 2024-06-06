@@ -54,13 +54,16 @@ public class OrderServiceImpl implements IOrderService {
         order.setShippingMethod(orderDTO.getShippingMethod());
         order.setPaymentMethod(orderDTO.getPaymentMethod());
         order.setTrackingNumber(generateTrackingNumber(10));
+        StringBuilder messageForAdmin = new StringBuilder();
         StringBuilder message = new StringBuilder();
+        message.append(user.getFullName()).append(" vừa tạo đơn hàng gồm: ");
         message.append("Đơn hàng của bạn gồm: ");
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (CartRequest cartRequest : orderDTO.getCartItems()) {
             Product product = productRepository.findById(cartRequest.getProductId())
                     .orElseThrow(()->new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
             message.append(product.getName()).append(", ");
+            messageForAdmin.append(product.getName()).append(", ");
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setProduct(product);
             orderDetail.setNumberOfProducts(cartRequest.getQuantity());
@@ -74,11 +77,18 @@ public class OrderServiceImpl implements IOrderService {
         order.setOrderDetails(orderDetails);
         message.append(", tổng tiền: ").append(order.getTotalMoney())
                 .append(", tracking number: ").append(order.getTrackingNumber()).append(".");
+        messageForAdmin.append(", tổng tiền: ").append(order.getTotalMoney());
         Notification notification = Notification.builder()
                 .user(user)
                 .message(message.toString())
                 .build();
-        notificationRepository.save(notification);
+        User admin = userRepository.findByRoleId("ec376e39-8dac-4e14-b0dd-fabd18927f15")
+                .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
+        Notification adminNoti = Notification.builder()
+                .user(admin)
+                .message(messageForAdmin.toString())
+                .build();
+        notificationRepository.saveAll(List.of(notification,adminNoti));
         return orderRepository.save(order);
     }
 
@@ -157,13 +167,28 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public Long countTotalOrder() {
-        return orderRepository.count();
+    public Long countOrdersByStatusAndYear(String status, int year) {
+        return orderRepository.countOrdersByStatusAndYear(status, year);
     }
 
     @Override
-    public Long countOrdersByStatusAndYear(String status, int year) {
-        return orderRepository.countOrdersByStatusAndYear(status, year);
+    public Map<String, Object> countOrdersByYear(int year) {
+        if (year == 2023) {
+            return Map.of("totalOrders", orderRepository.countOrdersByStatusAndYear(OrderStatus.SUCCESS.name(), 2023));
+        }
+        Map<String, Object> result = new HashMap<>();
+        Long totalNow = orderRepository.countOrdersByStatusAndYear(OrderStatus.SUCCESS.name(), year);
+        result.put("totalOrders", totalNow);
+        Long totalPreviousYear = orderRepository.countOrdersByStatusAndYear(OrderStatus.SUCCESS.name(), year-1)==0?1:orderRepository.countOrdersByStatusAndYear(OrderStatus.SUCCESS.name(), year-1);
+
+        if (totalNow > totalPreviousYear) {
+            Double rate = (1 - ((double)totalPreviousYear / totalNow))*100;
+            result.put("up", rate);
+        } else {
+            Double rate = (1 - ((double)totalNow / totalPreviousYear))*100;
+            result.put("down", rate);
+        }
+        return result;
     }
 
     @Override
@@ -179,6 +204,25 @@ public class OrderServiceImpl implements IOrderService {
             totalMoneyByMonth.put(monthName, totalMoney);
         }
         return totalMoneyByMonth;
+    }
+
+    @Override
+    public Map<String, Object> calculateOutcomeOrders(int year) {
+        if (year == 2023) {
+            return Map.of("outcome", orderRepository.calculateTotalMoneyOfSuccessfulOrders(2023));
+        }
+        Map<String, Object> result = new HashMap<>();
+        Double totalNow = orderRepository.calculateTotalMoneyOfSuccessfulOrders(year);
+        result.put("outcome", totalNow);
+        Double totalPreviousYear = orderRepository.calculateTotalMoneyOfSuccessfulOrders(year-1) == 0 ? 1 : orderRepository.calculateTotalMoneyOfSuccessfulOrders(year-1);
+        if (totalNow > totalPreviousYear) {
+            Double rate = (1 - ((double)totalPreviousYear / totalNow))*100;
+            result.put("up", rate);
+        } else {
+            Double rate = (1 - ((double)totalNow / totalPreviousYear))*100;
+            result.put("down", rate);
+        }
+        return result;
     }
 
     private String generateTrackingNumber(int length) {

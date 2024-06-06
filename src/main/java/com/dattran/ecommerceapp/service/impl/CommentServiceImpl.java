@@ -25,8 +25,8 @@ public class CommentServiceImpl implements ICommentService {
     CommentRepository commentRepository;
     ProductRepository productRepository;
     UserRepository userRepository;
-    OrderDetailRepository orderDetailRepository;
     OrderRepository orderRepository;
+    NotificationRepository notificationRepository;
     @Override
     public List<Comment> getAllCommentForProducts(String productId) {
         if (!productRepository.existsById(productId)) {
@@ -36,6 +36,7 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
+    @Transactional
     public Comment createComment(CommentDTO commentDTO) {
 //        if (commentRepository.findByProductIdAndUserId(commentDTO.getProductId(), commentDTO.getUserId())) {
 //            throw new AppException(ResponseStatus.COMMENT_ONLY_ONE);
@@ -58,6 +59,16 @@ public class CommentServiceImpl implements ICommentService {
                 .content(commentDTO.getContent())
                 .star(commentDTO.getStar())
                 .build();
+        User admin = userRepository.findByRoleId("ec376e39-8dac-4e14-b0dd-fabd18927f15")
+                .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
+        StringBuilder message = new StringBuilder();
+        message.append(user.getFullName()).append(" đã đánh giá sản phẩm ")
+                .append(product.getName());
+        Notification notification = Notification.builder()
+                .user(admin)
+                .message(message.toString())
+                .build();
+        notificationRepository.save(notification);
 //        orderDetail.getOrder().setIsCommented(true);
 //        orderDetailRepository.save(orderDetail);
         return commentRepository.save(comment);
@@ -80,16 +91,7 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public List<CommentResponse> getAllCommentWithStarGreaterThan(int star) {
         List<Comment> comments = commentRepository.findByStarGreaterThan(star);
-        return comments.stream()
-                .map(comment -> CommentResponse.builder()
-                        .id(comment.getId())
-                        .fullName(comment.getUser().getFullName())
-                        .createdAt(comment.getCreatedAt().toString())
-                        .updatedAt(comment.getUpdatedAt().toString())
-                        .star(comment.getStar())
-                        .content(comment.getContent())
-                        .build())
-                .collect(Collectors.toList());
+        return toCommentResponse(comments);
     }
 
     @Override
@@ -107,5 +109,24 @@ public class CommentServiceImpl implements ICommentService {
                     .build());
         }
         return !comments.isEmpty() ? commentDTOS : List.of();
+    }
+
+    @Override
+    public List<CommentResponse> getAllComments() {
+        List<Comment> comments = commentRepository.findAll();
+        return toCommentResponse(comments);
+    }
+
+    private List<CommentResponse> toCommentResponse(List<Comment> comments) {
+        return comments.stream()
+                .map(comment -> CommentResponse.builder()
+                        .id(comment.getId())
+                        .fullName(comment.getUser().getFullName())
+                        .createdAt(comment.getCreatedAt().toString())
+                        .updatedAt(comment.getUpdatedAt().toString())
+                        .star(comment.getStar())
+                        .content(comment.getContent())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

@@ -14,7 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -89,7 +92,21 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public long countTotalArticlesByYear(int year) {
-        return articleRepository.countArticlesByYear(year);
+    public Map<String, Object> countTotalArticlesByYear(int year) {
+        if (year == 2023) {
+            return Map.of("totalArticles", articleRepository.countArticlesByYear(2023));
+        }
+        Map<String, Object> result = new HashMap<>();
+        Long totalNow = articleRepository.countArticlesByYear(year);
+        result.put("totalArticles", totalNow);
+        Long totalPreviousYear = articleRepository.countArticlesByYear(year - 1)==0?1:articleRepository.countArticlesByYear(year - 1);
+        if (totalNow > totalPreviousYear) {
+            Double rate = (1 - ((double)totalPreviousYear / totalNow))*100;
+            result.put("up", rate);
+        } else {
+            Double rate = (1 - ((double)totalNow / totalPreviousYear))*100;
+            result.put("down", rate);
+        }
+        return result;
     }
 }
