@@ -1,4 +1,4 @@
-package com.dattran.ecommerceapp.custom;
+package com.dattran.ecommerceapp.custom.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

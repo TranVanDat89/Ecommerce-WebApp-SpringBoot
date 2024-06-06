@@ -1,6 +1,6 @@
 package com.dattran.ecommerceapp.dto.request;
 
-import com.dattran.ecommerceapp.custom.Password;
+import com.dattran.ecommerceapp.custom.validator.Password;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;

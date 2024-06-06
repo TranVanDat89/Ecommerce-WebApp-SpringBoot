@@ -82,4 +82,14 @@ public class ArticleServiceImpl implements IArticleService {
 //                .toList();
         return !articles.isEmpty() ? articles : List.of();
     }
+
+    @Override
+    public long countTotalArticles() {
+        return articleRepository.count();
+    }
+
+    @Override
+    public long countTotalArticlesByYear(int year) {
+        return articleRepository.countArticlesByYear(year);
+    }
 }

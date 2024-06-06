@@ -14,4 +14,6 @@ public interface IArticleService {
     List<ArticleCategory> getAllArticleCategories();
     Article getArticleById(String id);
     List<Article> getAllArticlesByCategoryId(String categoryId);
+    long countTotalArticles();
+    long countTotalArticlesByYear(int year);
 }

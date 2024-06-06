@@ -12,4 +12,6 @@ public interface IUserService {
     public String authenticate(LoginRequest loginRequest);
     UserResponse getUserDetailsFromToken(String token);
     List<UserResponse> getAllUsers();
+    long countTotalUsers();
+    long countTotalUsersByYear(int year);
 }

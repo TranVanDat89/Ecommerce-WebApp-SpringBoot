@@ -1,10 +1,6 @@
 package com.dattran.ecommerceapp.entity;
 
-import com.dattran.ecommerceapp.service.IProductRedisService;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @AllArgsConstructor
 public class ProductListener {

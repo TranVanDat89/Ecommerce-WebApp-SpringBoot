@@ -19,10 +19,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -69,7 +72,7 @@ public class OrderServiceImpl implements IOrderService {
         }
 //        orderDetailRepository.saveAll(orderDetails);
         order.setOrderDetails(orderDetails);
-        message.append("với mã đơn hàng ").append(order.getId())
+        message.append(", tổng tiền: ").append(order.getTotalMoney())
                 .append(", tracking number: ").append(order.getTrackingNumber()).append(".");
         Notification notification = Notification.builder()
                 .user(user)
@@ -127,25 +130,55 @@ public class OrderServiceImpl implements IOrderService {
                        product.setQuantity(product.getQuantity()-orderDetail.getNumberOfProducts());
                        productRepository.save(product);
                    });
-                   notification.setMessage(String.format("Đơn hàng %s đã giao thành công.", order.getId()));
+                   notification.setMessage(String.format("Đơn hàng %s đã giao thành công.", order.getTrackingNumber()));
                    break;
 
             case DELIVERING:
                 Notification notiForDelivering = Notification.builder()
                         .user(delivery)
-                        .message(String.format("Bạn có đơn hàng %s.", order.getId()))
+                        .message(String.format("Bạn có đơn hàng %s.", order.getTrackingNumber()))
                         .build();
                 notificationRepository.save(notiForDelivering);
-                notification.setMessage(String.format("Đơn hàng %s đang trên đường giao đến bạn. Vui lòng chú ý điện thoại.", order.getId()));
+                notification.setMessage(String.format("Đơn hàng %s đang trên đường giao đến bạn. Vui lòng chú ý điện thoại.", order.getTrackingNumber()));
                 break;
 
             case CANCELLED:
                 order.setNote(orderStatusRequest.getNote());
-                notification.setMessage(String.format("Đơn hàng %s đã bị hủy với lí do %s.", order.getId(), order.getNote()));
+                notification.setMessage(String.format("Đơn hàng %s đã bị hủy với lí do %s.", order.getTrackingNumber(), order.getNote()));
                 break;
         }
         notificationRepository.save(notification);
         return orderRepository.save(order);
+    }
+
+    @Override
+    public Double calculateOutcomeOfSuccessfulOrders(int year) {
+        return orderRepository.calculateTotalMoneyOfSuccessfulOrders(year);
+    }
+
+    @Override
+    public Long countTotalOrder() {
+        return orderRepository.count();
+    }
+
+    @Override
+    public Long countOrdersByStatusAndYear(String status, int year) {
+        return orderRepository.countOrdersByStatusAndYear(status, year);
+    }
+
+    @Override
+    public Map<String, Double> getTotalMoneyByStatusAndYearGroupedByMonth(String status, int year) {
+        List<Object[]> results = orderRepository.getTotalMoneyByStatusAndYearGroupedByMonth(status, year);
+        Map<String, Double> totalMoneyByMonth = new HashMap<>();
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] months = dfs.getMonths();
+        for (Object[] result : results) {
+            Integer monthNumber = (Integer) result[0];
+            String monthName = months[monthNumber - 1]; // Month numbers are 1-based in SQL
+            Double totalMoney = (Double) result[1];
+            totalMoneyByMonth.put(monthName, totalMoney);
+        }
+        return totalMoneyByMonth;
     }
 
     private String generateTrackingNumber(int length) {

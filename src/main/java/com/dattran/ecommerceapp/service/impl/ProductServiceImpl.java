@@ -165,4 +165,12 @@ public class ProductServiceImpl implements IProductService {
         }
         return List.of();
     }
+
+    @Override
+    public Map<String, Long> countByCategory() {
+        Map<String, Long> result = new HashMap<>();
+        List<Category> categories = categoryRepository.findAll();
+        categories.forEach(category -> result.put(category.getName(), productRepository.countByCategoryId(category.getId())));
+        return result;
+    }
 }

@@ -7,23 +7,15 @@ import com.dattran.ecommerceapp.entity.*;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.exception.AppException;
 import com.dattran.ecommerceapp.service.ICommentService;
-import com.dattran.ecommerceapp.service.IProductRedisService;
 import com.dattran.ecommerceapp.service.IProductService;
 import com.dattran.ecommerceapp.util.SecurityUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,9 +30,7 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("${api.prefix}/products")
 public class ProductController {
-    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     IProductService productService;
-    IProductRedisService productRedisService;
     ICommentService commentService;
     SecurityUtil securityUtil;
 
@@ -188,4 +178,6 @@ public class ProductController {
                 .build();
         return httpResponse;
     }
+
+
 }

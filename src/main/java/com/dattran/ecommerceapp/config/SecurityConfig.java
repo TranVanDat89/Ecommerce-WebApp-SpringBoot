@@ -1,14 +1,19 @@
 package com.dattran.ecommerceapp.config;
 
+import com.dattran.ecommerceapp.filter.CorsFilter;
 import com.dattran.ecommerceapp.filter.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,7 +29,8 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/v1/users/auth/**",
+            "/api/v1/users/auth/register",
+            "/api/v1/users/auth/login",
             "/api/v1/products/**",
             "/api/v1/categories",
             "/api/v1/products/product-detail/**",
@@ -47,6 +53,7 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/comments/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/users/auth/**").permitAll()
                                 .anyRequest().authenticated());
         http.cors(httpSecurityCorsConfigurer -> {
             CorsConfiguration configuration = new CorsConfiguration();
@@ -58,6 +65,7 @@ public class SecurityConfig {
             source.registerCorsConfiguration("/**", configuration);
             httpSecurityCorsConfigurer.configurationSource(source);
         });
+        http.securityMatcher(String.valueOf(EndpointRequest.toAnyEndpoint()));
         return http.build();
     }
 }

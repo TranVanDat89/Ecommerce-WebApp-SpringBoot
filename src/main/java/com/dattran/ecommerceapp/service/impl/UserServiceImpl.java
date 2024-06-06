@@ -58,7 +58,8 @@ public class UserServiceImpl implements IUserService {
             user.setAddress("Việt Nam");
         }
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        return userMapper.toUserResponse(userRepository.save(user));
+        UserResponse userResponse = userMapper.toUserResponse(userRepository.save(user));
+        return userResponse;
     }
 
     @Override
@@ -109,5 +110,15 @@ public class UserServiceImpl implements IUserService {
                         .role(user.getRole().getName())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public long countTotalUsers() {
+        return userRepository.count();
+    }
+
+    @Override
+    public long countTotalUsersByYear(int year) {
+        return userRepository.countUsersByYear(year);
     }
 }
