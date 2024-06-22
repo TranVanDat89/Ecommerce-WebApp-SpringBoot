@@ -5,11 +5,13 @@ import com.dattran.ecommerceapp.dto.request.UserRequest;
 import com.dattran.ecommerceapp.dto.response.CommentResponse;
 import com.dattran.ecommerceapp.dto.response.UserResponse;
 import com.dattran.ecommerceapp.entity.Role;
+import com.dattran.ecommerceapp.entity.Token;
 import com.dattran.ecommerceapp.entity.User;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.exception.AppException;
 import com.dattran.ecommerceapp.mapper.UserMapper;
 import com.dattran.ecommerceapp.repository.RoleRepository;
+import com.dattran.ecommerceapp.repository.TokenRepository;
 import com.dattran.ecommerceapp.repository.UserRepository;
 import com.dattran.ecommerceapp.service.IUserService;
 import com.dattran.ecommerceapp.util.JwtTokenUtil;
@@ -23,7 +25,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -40,11 +44,11 @@ public class UserServiceImpl implements IUserService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     AuthenticationManager authenticationManager;
+    TokenRepository tokenRepository;
     JwtTokenUtil jwtTokenUtil;
-
     @Override
     @Transactional
-    public UserResponse createUser(UserRequest request) {
+    public Token createUser(UserRequest request) {
         if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
             throw new AppException(ResponseStatus.PHONE_NUMBER_EXISTED);
         }
@@ -60,10 +64,27 @@ public class UserServiceImpl implements IUserService {
             user.setAddress("Việt Nam");
         }
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        UserResponse userResponse = userMapper.toUserResponse(userRepository.save(user));
-        return userResponse;
+//        UserResponse userResponse = userMapper.toUserResponse(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+        String token = generateActivationCode(6);
+        Token validateToken = Token.builder()
+                .token(token)
+                .user(savedUser)
+                .expiredAt(LocalDateTime.now().plusMinutes(15))
+                .build();
+        return tokenRepository.save(validateToken);
     }
+    private String generateActivationCode(int length) {
+        String characters = "0123456789";
+        StringBuilder codeBuilder = new StringBuilder();
+        SecureRandom secureRandom = new SecureRandom();
+        for (int i = 0; i < length; i++) {
+            int randomIndex = secureRandom.nextInt(characters.length());
+            codeBuilder.append(characters.charAt(randomIndex));
+        }
 
+        return codeBuilder.toString();
+    }
     @Override
     public String authenticate(LoginRequest loginRequest) {
         Optional<User> optionalUser = userRepository.findByPhoneNumber(loginRequest.getPhoneNumber());

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.DialectOverride;
 
 @Entity
 @Table(name = "comments")
@@ -30,4 +31,6 @@ public class Comment extends BaseEntity{
     @Column(length = 500)
     String content;
     Integer star;
+    @Column(name = "is_deleted")
+    Boolean isDeleted;
 }

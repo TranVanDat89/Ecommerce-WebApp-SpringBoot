@@ -40,7 +40,8 @@ public class Product extends BaseEntity implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "detail_id", referencedColumnName = "id")
     ProductDetail productDetail;
-
+    @Column(name = "is_deleted")
+    Boolean isDeleted;
     @OneToMany(mappedBy = "product",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)

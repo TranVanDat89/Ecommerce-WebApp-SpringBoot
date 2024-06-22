@@ -78,17 +78,6 @@ public class OrderServiceImpl implements IOrderService {
         message.append(", tổng tiền: ").append(order.getTotalMoney())
                 .append(", tracking number: ").append(order.getTrackingNumber()).append(".");
         messageForAdmin.append(", tổng tiền: ").append(order.getTotalMoney());
-        Notification notification = Notification.builder()
-                .user(user)
-                .message(message.toString())
-                .build();
-        User admin = userRepository.findByRoleId("ec376e39-8dac-4e14-b0dd-fabd18927f15")
-                .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
-        Notification adminNoti = Notification.builder()
-                .user(admin)
-                .message(messageForAdmin.toString())
-                .build();
-        notificationRepository.saveAll(List.of(notification,adminNoti));
         return orderRepository.save(order);
     }
 

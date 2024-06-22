@@ -17,4 +17,6 @@ public class ArticleCategory {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
+    @Column(name = "is_deleted")
+    Boolean isDeleted;
 }

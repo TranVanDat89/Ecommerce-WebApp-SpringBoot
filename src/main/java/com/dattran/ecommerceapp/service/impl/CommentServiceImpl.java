@@ -59,18 +59,6 @@ public class CommentServiceImpl implements ICommentService {
                 .content(commentDTO.getContent())
                 .star(commentDTO.getStar())
                 .build();
-        User admin = userRepository.findByRoleId("ec376e39-8dac-4e14-b0dd-fabd18927f15")
-                .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
-        StringBuilder message = new StringBuilder();
-        message.append(user.getFullName()).append(" đã đánh giá sản phẩm ")
-                .append(product.getName());
-        Notification notification = Notification.builder()
-                .user(admin)
-                .message(message.toString())
-                .build();
-        notificationRepository.save(notification);
-//        orderDetail.getOrder().setIsCommented(true);
-//        orderDetailRepository.save(orderDetail);
         return commentRepository.save(comment);
     }
     @Transactional
@@ -98,13 +86,13 @@ public class CommentServiceImpl implements ICommentService {
     public List<CommentResponse> getAllCommentByUserId(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new AppException(ResponseStatus.USER_NOT_FOUND));
-        List<Comment> comments = commentRepository.findByUserId(userId);
+        List<Comment> comments = commentRepository.findByUserIdAndIsDeleted(userId, false);
         return toCommentResponse(comments);
     }
 
     @Override
     public List<CommentResponse> getAllComments() {
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = commentRepository.findByIsDeleted(false);
         return toCommentResponse(comments);
     }
 

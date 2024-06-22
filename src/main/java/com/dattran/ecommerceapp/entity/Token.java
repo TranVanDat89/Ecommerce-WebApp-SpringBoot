@@ -3,22 +3,25 @@ package com.dattran.ecommerceapp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "tokens")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class Category {
+public class Token extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    @Column(name = "is_deleted")
-    Boolean isDeleted;
-    @Column(name = "name", nullable = false, unique = true)
-    String name;
+    String token;
+    LocalDateTime expiredAt;
+    LocalDateTime validatedAt;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    User user;
 }

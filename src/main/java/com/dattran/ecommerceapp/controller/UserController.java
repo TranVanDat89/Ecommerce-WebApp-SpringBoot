@@ -4,6 +4,7 @@ import com.dattran.ecommerceapp.dto.request.LoginRequest;
 import com.dattran.ecommerceapp.dto.request.UserRequest;
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
 import com.dattran.ecommerceapp.dto.response.UserResponse;
+import com.dattran.ecommerceapp.entity.Token;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
 import com.dattran.ecommerceapp.service.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class UserController {
 
     @PostMapping("/register")
     public HttpResponse registerUser(@RequestBody @Valid UserRequest userRequest, HttpServletRequest httpServletRequest) {
-        UserResponse userResponse = userService.createUser(userRequest);
+        Token token = userService.createUser(userRequest);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())
@@ -36,7 +37,7 @@ public class UserController {
                 .status(HttpStatus.CREATED)
                 .statusCode(ResponseStatus.USER_CREATED.getCode())
                 .message(ResponseStatus.USER_CREATED.getMessage())
-                .data(Map.of("user", userResponse))
+                .data(Map.of("token", token))
                 .build();
         return httpResponse;
     }

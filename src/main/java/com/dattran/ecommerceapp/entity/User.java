@@ -61,6 +61,8 @@ public class User extends BaseEntity implements UserDetails, Principal {
     @JsonManagedReference
     List<Notification> notifications = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Token> tokens;
     @Override
     public String getName() {
         return this.phoneNumber;
