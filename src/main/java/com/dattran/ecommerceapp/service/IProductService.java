@@ -25,4 +25,5 @@ public interface IProductService {
     List<WishList> getAllFavoriteProducts(String userId);
     List<Product> getAllProductByCategory(String categoryId);
     Map<String, Long> countByCategory();
+    void deleteWishList(String wishListId);
 }

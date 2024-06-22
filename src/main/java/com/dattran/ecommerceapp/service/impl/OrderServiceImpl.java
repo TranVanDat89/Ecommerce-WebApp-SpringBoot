@@ -214,6 +214,41 @@ public class OrderServiceImpl implements IOrderService {
         return result;
     }
 
+    @Override
+    public void cancelOrder(String orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ResponseStatus.ORDER_NOT_FOUND));
+        order.setStatus(OrderStatus.CANCELLED.name());
+        orderRepository.save(order);
+    }
+
+    @Override
+    public List<OrderDetailResponse> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
+        orders.forEach(order -> {
+            List<OrderDetail> orderDetails = order.getOrderDetails();
+            List<DetailResponse> detailResponses = new ArrayList<>();
+            orderDetails.forEach(orderDetail -> {
+                DetailResponse detailResponse = DetailResponse.builder()
+                        .productName(orderDetail.getProduct().getName())
+                        .price(orderDetail.getPrice())
+                        .productId(orderDetail.getProduct().getId())
+                        .totalMoney(orderDetail.getTotalMoney())
+                        .numberOfProducts(orderDetail.getNumberOfProducts())
+                        .productThumbnail(orderDetail.getProduct().getThumbnail())
+                        .build();
+                detailResponses.add(detailResponse);
+            });
+            OrderDetailResponse orderDetailResponse = OrderDetailResponse.builder()
+                    .order(order)
+                    .detailResponses(detailResponses)
+                    .build();
+            orderDetailResponses.add(orderDetailResponse);
+        });
+        return orderDetailResponses;
+    }
+
     private String generateTrackingNumber(int length) {
         String characters = "0123456789";
         StringBuilder codeBuilder = new StringBuilder();

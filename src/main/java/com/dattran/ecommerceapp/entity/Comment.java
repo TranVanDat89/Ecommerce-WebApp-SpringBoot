@@ -31,6 +31,6 @@ public class Comment extends BaseEntity{
     @Column(length = 500)
     String content;
     Integer star;
-    @Column(name = "is_deleted")
+    @Column(name = "is_deleted", columnDefinition = "bool default false")
     Boolean isDeleted;
 }

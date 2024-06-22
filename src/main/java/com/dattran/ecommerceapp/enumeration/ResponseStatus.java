@@ -51,6 +51,9 @@ public enum ResponseStatus {
     UPDATE_ORDER_SUCCESSFULLY(200, "Update order successfully."),
     GET_ALL_NOTIFICATION_SUCCESSFULLY(200, "Get all notification successfully."),
     COMMENT_CREATED(201, "Comment created successfully."),
+    COMMENT_NOT_FOUND(404, "Comment not found"),
+    COMMENT_UPDATED(200, "Comment updated successfully."),
+    COMMENT_DELETED(200, "Comment deleted successfully.")
     ;
     private final int code;
     private final String message;

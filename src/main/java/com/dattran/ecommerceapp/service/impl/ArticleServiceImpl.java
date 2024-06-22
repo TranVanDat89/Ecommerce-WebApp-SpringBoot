@@ -48,6 +48,7 @@ public class ArticleServiceImpl implements IArticleService {
         Article article = Article.builder()
                 .title(articleDTO.getTitle())
                 .content(articleDTO.getContent())
+                .isDeleted(false)
                 .imageUrl(imageUrl.isEmpty() ? null : imageUrl)
                 .category(articleCategory)
                 .build();

@@ -23,6 +23,6 @@ public class Article extends BaseEntity{
     String imageUrl;
     @Column(name = "content", columnDefinition = "LONGTEXT")
     String content;
-    @Column(name = "is_deleted")
+    @Column(name = "is_deleted", columnDefinition = "bool default false")
     Boolean isDeleted;
 }

@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -179,5 +180,17 @@ public class ProductController {
         return httpResponse;
     }
 
-
+    @DeleteMapping("/delete-wishlist/{id}")
+    public HttpResponse deleteWishList(@PathVariable String id, HttpServletRequest httpServletRequest) {
+        productService.deleteWishList(id);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+                .build();
+        return httpResponse;
+    }
 }

@@ -19,4 +19,6 @@ public interface IOrderService {
     Map<String, ?> countOrdersByYear(int year);
     Map<String, Double> getTotalMoneyByStatusAndYearGroupedByMonth(String status, int year);
     Map<String, ?> calculateOutcomeOrders(int year);
+    void cancelOrder(String orderId);
+    List<OrderDetailResponse> getAllOrders();
 }

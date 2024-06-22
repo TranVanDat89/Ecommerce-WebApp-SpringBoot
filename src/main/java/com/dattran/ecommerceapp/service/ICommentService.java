@@ -13,4 +13,6 @@ public interface ICommentService {
     List<CommentResponse> getAllCommentWithStarGreaterThan(int star);
     List<CommentResponse> getAllCommentByUserId(String userId);
     List<CommentResponse> getAllComments();
+    void deleteComment(String commentId);
+    Comment updateComment(String commentId, CommentDTO commentDTO);
 }

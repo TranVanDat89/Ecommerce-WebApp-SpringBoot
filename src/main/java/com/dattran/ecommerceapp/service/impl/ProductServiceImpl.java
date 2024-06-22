@@ -45,6 +45,7 @@ public class ProductServiceImpl implements IProductService {
         Optional<Category> optionalCategory = categoryRepository.findByName(productDTO.getCategoryName());
         Category category = optionalCategory.orElseGet(() -> categoryRepository.save(Category.builder().name(productDTO.getCategoryName().trim()).build()));
         product.setCategory(category);
+        product.setIsDeleted(false);
         String flavors = productDTO.getFlavors();
         Ingredient ingredient = entityMapper.toIngredient(productDTO);
         StringTokenizer stringTokenizer = new StringTokenizer(flavors, ",");
@@ -172,5 +173,10 @@ public class ProductServiceImpl implements IProductService {
         List<Category> categories = categoryRepository.findAll();
         categories.forEach(category -> result.put(category.getName(), productRepository.countByCategoryId(category.getId())));
         return result;
+    }
+
+    @Override
+    public void deleteWishList(String wishListId) {
+        wishListRepository.deleteById(wishListId);
     }
 }

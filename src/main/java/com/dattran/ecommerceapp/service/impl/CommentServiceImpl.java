@@ -58,6 +58,7 @@ public class CommentServiceImpl implements ICommentService {
                 .product(product)
                 .content(commentDTO.getContent())
                 .star(commentDTO.getStar())
+                .isDeleted(false)
                 .build();
         return commentRepository.save(comment);
     }
@@ -94,6 +95,21 @@ public class CommentServiceImpl implements ICommentService {
     public List<CommentResponse> getAllComments() {
         List<Comment> comments = commentRepository.findByIsDeleted(false);
         return toCommentResponse(comments);
+    }
+
+    @Override
+    public void deleteComment(String commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new AppException(ResponseStatus.COMMENT_NOT_FOUND));
+        comment.setIsDeleted(true);
+        commentRepository.save(comment);
+    }
+
+    @Override
+    public Comment updateComment(String commentId, CommentDTO commentDTO) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new AppException(ResponseStatus.COMMENT_NOT_FOUND));
+        comment.setContent(commentDTO.getContent());
+        comment.setStar(comment.getStar());
+        return commentRepository.save(comment);
     }
 
     private List<CommentResponse> toCommentResponse(List<Comment> comments) {

@@ -104,4 +104,33 @@ public class CommentController {
                 .build();
         return httpResponse;
     }
+    @PutMapping("/update-comment/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public HttpResponse updateComment(@PathVariable String id, @RequestBody @Valid CommentDTO commentDTO, HttpServletRequest httpServletRequest) {
+        Comment comment = commentService.updateComment(id, commentDTO);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.COMMENT_UPDATED.getCode())
+                .message(ResponseStatus.COMMENT_UPDATED.getMessage())
+                .build();
+        return httpResponse;
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public HttpResponse deleteComment(@PathVariable String id, HttpServletRequest httpServletRequest) {
+        commentService.deleteComment(id);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.COMMENT_DELETED.getCode())
+                .message(ResponseStatus.COMMENT_DELETED.getMessage())
+                .build();
+        return httpResponse;
+    }
 }

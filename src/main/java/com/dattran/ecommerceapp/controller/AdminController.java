@@ -55,7 +55,6 @@ public class AdminController {
         Map<String, ?> totalUsers = userService.countTotalUsersByYear(year);
         Map<String, ?> totalArticles = articleService.countTotalArticlesByYear(year);
         Map<String, ?> totalOrders = orderService.countOrdersByYear(year);
-        List<?> result = List.of(outcome, totalOrders, totalArticles, totalUsers);
         HttpResponse httpResponse = HttpResponse.builder()
                 .timeStamp(LocalDateTime.now().toString())
                 .path(httpServletRequest.getRequestURI())
@@ -63,7 +62,7 @@ public class AdminController {
                 .status(HttpStatus.OK)
                 .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
                 .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
-                .data(Map.of("result", result))
+                .data(Map.of("outcome", outcome, "totalUsers", totalUsers, "totalArticles", totalArticles, "totalOrders", totalOrders))
                 .build();
         return httpResponse;
     }

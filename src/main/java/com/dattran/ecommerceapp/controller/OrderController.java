@@ -83,4 +83,33 @@ public class OrderController {
                 .build();
         return httpResponse;
     }
+
+    @PostMapping("/delete-order/{id}")
+    public HttpResponse deleteOrder(@PathVariable("id") String id, HttpServletRequest httpServletRequest) {
+        orderService.cancelOrder(id);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.CREATED)
+                .statusCode(ResponseStatus.UPDATE_ORDER_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.UPDATE_ORDER_SUCCESSFULLY.getMessage())
+                .build();
+        return httpResponse;
+    }
+
+    @GetMapping("/get-all-orders")
+    public HttpResponse getAllOrders(HttpServletRequest httpServletRequest) {
+        List<OrderDetailResponse> orderDetails = orderService.getAllOrders();
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.CREATED)
+                .statusCode(ResponseStatus.GET_ORDER_DETAIL_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_ORDER_DETAIL_SUCCESSFULLY.getMessage())
+                .data(Map.of("orderDetails", orderDetails))
+                .build();
+        return httpResponse;
+    }
 }
