@@ -53,7 +53,8 @@ public enum ResponseStatus {
     COMMENT_CREATED(201, "Comment created successfully."),
     COMMENT_NOT_FOUND(404, "Comment not found"),
     COMMENT_UPDATED(200, "Comment updated successfully."),
-    COMMENT_DELETED(200, "Comment deleted successfully.")
+    COMMENT_DELETED(200, "Comment deleted successfully."),
+    CATEGORY_EXISTED(405, "Category existed."),
     ;
     private final int code;
     private final String message;

@@ -13,10 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,6 +37,31 @@ public class CategoryController {
                 .statusCode(ResponseStatus.GET_ALL_CATEGORIES_SUCCESSFULLY.getCode())
                 .message(ResponseStatus.GET_ALL_CATEGORIES_SUCCESSFULLY.getMessage())
                 .data(Map.of("categories", categories))
+                .build();
+        return httpResponse;
+    }
+
+    @PostMapping("")
+    public HttpResponse createCategory(@RequestBody String categoryName, @RequestParam Boolean isArticleCategory, HttpServletRequest httpServletRequest) {
+        Category newCategory = categoryService.createCategory(categoryName, isArticleCategory);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .data(Map.of("category", newCategory))
+                .build();
+        return httpResponse;
+    }
+
+    @DeleteMapping("/{id}")
+    public HttpResponse deleteCategory(@PathVariable String id, @RequestParam boolean isArticleCategory, HttpServletRequest httpServletRequest) {
+        categoryService.deleteCategory(id, isArticleCategory);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
                 .build();
         return httpResponse;
     }

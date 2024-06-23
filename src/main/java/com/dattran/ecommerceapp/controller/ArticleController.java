@@ -124,4 +124,15 @@ public class ArticleController {
                 .build();
         return httpResponse;
     }
+    @DeleteMapping("/delete-article/{id}")
+    public HttpResponse deleteArticle(@PathVariable("id") String articleId, HttpServletRequest httpServletRequest) {
+        articleService.deleteArticle(articleId);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .build();
+        return httpResponse;
+    }
 }

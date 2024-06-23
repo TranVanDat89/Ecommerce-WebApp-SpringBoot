@@ -14,4 +14,5 @@ public interface ArticleRepository extends JpaRepository<Article, String> {
     long count();
     @Query(value = "SELECT COUNT(*) FROM articles a WHERE YEAR(a.created_at) = :year", nativeQuery = true)
     long countArticlesByYear(@Param("year") int year);
+    List<Article> findAllByIsDeleted(boolean isDeleted);
 }

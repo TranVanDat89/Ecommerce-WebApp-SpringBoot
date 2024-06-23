@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, String> {
     boolean existsByName(String name);
@@ -20,4 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 //            (@Param("categoryId") String categoryId,
 //             @Param("keyword") String keyword, Pageable pageable);
     Long countByCategoryId(String categoryId);
+    List<Product> findAllByIsDeleted(Boolean isDeleted);
+
+    @Query(value = "SELECT * FROM products p WHERE YEAR(p.created_at) = :year AND p.solved = (SELECT MAX(p2.solved) FROM products p2 WHERE YEAR(p2.created_at) = :year)", nativeQuery = true)
+    List<Product> findProductWithMaxSolvedByYear(@Param("year") int year);
 }

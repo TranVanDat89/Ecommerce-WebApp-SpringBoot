@@ -28,7 +28,7 @@ public class ArticleServiceImpl implements IArticleService {
     S3Service s3Service;
     @Override
     public List<Article> getAllArticles() {
-        return articleRepository.findAll();
+        return articleRepository.findAllByIsDeleted(false);
     }
 
     @Override
@@ -57,7 +57,10 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public void deleteArticle(String id) {
-
+        Article article = articleRepository.findById(id)
+                .orElseThrow(()->new AppException(ResponseStatus.ARTICLE_NOT_FOUND));
+        article.setIsDeleted(true);
+        articleRepository.save(article);
     }
 
     @Override
@@ -67,7 +70,7 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public List<ArticleCategory> getAllArticleCategories() {
-        return articleCategoryRepository.findAll();
+        return articleCategoryRepository.findAllByIsDeleted(false);
     }
 
     @Override

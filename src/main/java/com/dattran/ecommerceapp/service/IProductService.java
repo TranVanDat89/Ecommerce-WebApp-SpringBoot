@@ -1,6 +1,7 @@
 package com.dattran.ecommerceapp.service;
 
 import com.dattran.ecommerceapp.dto.ProductDTO;
+import com.dattran.ecommerceapp.dto.ProductDTOWithImages;
 import com.dattran.ecommerceapp.dto.response.WishListResponse;
 import com.dattran.ecommerceapp.entity.Product;
 import com.dattran.ecommerceapp.entity.ProductImage;
@@ -26,4 +27,7 @@ public interface IProductService {
     List<Product> getAllProductByCategory(String categoryId);
     Map<String, Long> countByCategory();
     void deleteWishList(String wishListId);
+    List<Product> findProductWithMaxSolvedByYear(int year);
+    Product createProductWithImages(ProductDTOWithImages productDTOWithImages);
+    void deleteProduct(String id);
 }

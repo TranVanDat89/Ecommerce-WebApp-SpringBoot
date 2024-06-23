@@ -2,6 +2,7 @@ package com.dattran.ecommerceapp.mapper;
 
 import com.dattran.ecommerceapp.dto.OrderDTO;
 import com.dattran.ecommerceapp.dto.ProductDTO;
+import com.dattran.ecommerceapp.dto.ProductDTOWithImages;
 import com.dattran.ecommerceapp.entity.Ingredient;
 import com.dattran.ecommerceapp.entity.Order;
 import com.dattran.ecommerceapp.entity.Product;
@@ -16,4 +17,8 @@ public interface EntityMapper {
     Ingredient toIngredient(ProductDTO productDTO);
     ProductDetail toProductDetail(ProductDTO productDTO);
     Order toOder(OrderDTO orderDTO);
+    @Mapping(target = "flavors", ignore = true)
+    Ingredient toIngredient(ProductDTOWithImages productDTO);
+    ProductDetail toProductDetail(ProductDTOWithImages productDTO);
+    Product toProduct(ProductDTOWithImages productDTO);
 }

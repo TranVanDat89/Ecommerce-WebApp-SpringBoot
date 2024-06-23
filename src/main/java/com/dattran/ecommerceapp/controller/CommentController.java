@@ -120,7 +120,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse deleteComment(@PathVariable String id, HttpServletRequest httpServletRequest) {
         commentService.deleteComment(id);
         HttpResponse httpResponse = HttpResponse.builder()

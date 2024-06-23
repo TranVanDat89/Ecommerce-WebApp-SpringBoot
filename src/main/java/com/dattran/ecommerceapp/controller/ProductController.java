@@ -2,6 +2,7 @@ package com.dattran.ecommerceapp.controller;
 
 import com.dattran.ecommerceapp.dto.CommentDTO;
 import com.dattran.ecommerceapp.dto.ProductDTO;
+import com.dattran.ecommerceapp.dto.ProductDTOWithImages;
 import com.dattran.ecommerceapp.dto.response.HttpResponse;
 import com.dattran.ecommerceapp.entity.*;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,6 +49,19 @@ public class ProductController {
                 .statusCode(ResponseStatus.PRODUCT_CREATED.getCode())
                 .message(ResponseStatus.PRODUCT_CREATED.getMessage())
                 .data(Map.of("product", product))
+                .build();
+        return httpResponse;
+    }
+    @PostMapping(value = "/create-product-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public HttpResponse createProductWithImages(@ModelAttribute @Validated ProductDTOWithImages productDTO, HttpServletRequest httpServletRequest) {
+        Product product = productService.createProductWithImages(productDTO);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.CREATED)
+                .statusCode(ResponseStatus.PRODUCT_CREATED.getCode())
+                .message(ResponseStatus.PRODUCT_CREATED.getMessage())
                 .build();
         return httpResponse;
     }
@@ -190,6 +205,34 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
                 .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+                .build();
+        return httpResponse;
+    }
+
+    @GetMapping("/product-with-max-solved")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public HttpResponse getProductWithMaxSolvedByYear(@RequestParam int year, HttpServletRequest httpServletRequest) {
+        List<Product> products = productService.findProductWithMaxSolvedByYear(year);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("products", products))
+                .build();
+        return httpResponse;
+    }
+
+    @DeleteMapping("/{id}")
+    public HttpResponse deleteProduct(@PathVariable String id, HttpServletRequest httpServletRequest) {
+        productService.deleteProduct(id);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
                 .build();
         return httpResponse;
     }

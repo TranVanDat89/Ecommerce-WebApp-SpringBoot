@@ -2,6 +2,7 @@ package com.dattran.ecommerceapp.service.impl;
 
 import com.dattran.ecommerceapp.aws.S3Service;
 import com.dattran.ecommerceapp.dto.ProductDTO;
+import com.dattran.ecommerceapp.dto.ProductDTOWithImages;
 import com.dattran.ecommerceapp.dto.response.WishListResponse;
 import com.dattran.ecommerceapp.entity.*;
 import com.dattran.ecommerceapp.enumeration.ResponseStatus;
@@ -99,7 +100,7 @@ public class ProductServiceImpl implements IProductService {
     }
     @Override
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productRepository.findAllByIsDeleted(false);
     }
 
     @Override
@@ -178,5 +179,47 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void deleteWishList(String wishListId) {
         wishListRepository.deleteById(wishListId);
+    }
+
+    @Override
+    public List<Product> findProductWithMaxSolvedByYear(int year) {
+        return productRepository.findProductWithMaxSolvedByYear(year);
+    }
+
+    @Override
+    public Product createProductWithImages(ProductDTOWithImages productDTOWithImages) {
+        if (productRepository.existsByName(productDTOWithImages.getName().trim())) {
+            throw new AppException(ResponseStatus.PRODUCT_EXISTED);
+        }
+        Product product = entityMapper.toProduct(productDTOWithImages);
+        Optional<Category> optionalCategory = categoryRepository.findByName(productDTOWithImages.getCategoryName());
+        Category category = optionalCategory.orElseGet(() -> categoryRepository.save(Category.builder().name(productDTOWithImages.getCategoryName().trim()).build()));
+        product.setCategory(category);
+        product.setIsDeleted(false);
+        String flavors = productDTOWithImages.getFlavors();
+        Ingredient ingredient = entityMapper.toIngredient(productDTOWithImages);
+        StringTokenizer stringTokenizer = new StringTokenizer(flavors, ",");
+        Set<Flavor> flavorSet = new HashSet<>();
+        while (stringTokenizer.hasMoreTokens()) {
+            String currentFlavor = stringTokenizer.nextToken().trim();
+            Optional<Flavor> optionalFlavor = flavorRepository.findByName(currentFlavor);
+            Flavor flavor = optionalFlavor.orElseGet(() -> flavorRepository.save(Flavor.builder().name(currentFlavor).build()));
+            flavorSet.add(flavor);
+        }
+        ingredient.setFlavors(flavorSet);
+        product.setIngredient(ingredient);
+        ProductDetail productDetail = entityMapper.toProductDetail(productDTOWithImages);
+        product.setProductDetail(productDetail);
+        Product savedProduct = productRepository.save(product);
+        uploadImages(savedProduct.getId(), productDTOWithImages.getImages());
+        return savedProduct;
+    }
+
+    @Override
+    public void deleteProduct(String id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
+        product.setIsDeleted(true);
+        productRepository.save(product);
     }
 }

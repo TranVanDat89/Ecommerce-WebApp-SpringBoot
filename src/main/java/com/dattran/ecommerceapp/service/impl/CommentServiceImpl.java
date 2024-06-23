@@ -108,7 +108,7 @@ public class CommentServiceImpl implements ICommentService {
     public Comment updateComment(String commentId, CommentDTO commentDTO) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(()->new AppException(ResponseStatus.COMMENT_NOT_FOUND));
         comment.setContent(commentDTO.getContent());
-        comment.setStar(comment.getStar());
+        comment.setStar(commentDTO.getStar());
         return commentRepository.save(comment);
     }
 
