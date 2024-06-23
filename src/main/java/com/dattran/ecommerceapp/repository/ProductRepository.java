@@ -25,4 +25,8 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     @Query(value = "SELECT * FROM products p WHERE YEAR(p.created_at) = :year AND p.solved = (SELECT MAX(p2.solved) FROM products p2 WHERE YEAR(p2.created_at) = :year)", nativeQuery = true)
     List<Product> findProductWithMaxSolvedByYear(@Param("year") int year);
+
+    @Query(value = "SELECT * FROM products p WHERE " +
+            "LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))", nativeQuery = true)
+    List<Product> search(@Param("keyword") String keyword);
 }

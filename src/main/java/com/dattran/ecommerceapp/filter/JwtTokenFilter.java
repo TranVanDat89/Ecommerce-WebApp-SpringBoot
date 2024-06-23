@@ -88,6 +88,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             if (requestPath.contains("/api/v1/products/product-detail") && requestMethod.equals("GET")) {
                 return true;
             }
+            if (requestPath.contains("/api/v1/products/search") && requestMethod.equals("POST")) {
+                return true;
+            }
             if (requestPath.contains("/api/v1/products/category")) {
                 return true;
             }

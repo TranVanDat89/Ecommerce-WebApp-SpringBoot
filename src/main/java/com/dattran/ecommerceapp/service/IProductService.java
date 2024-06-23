@@ -30,4 +30,5 @@ public interface IProductService {
     List<Product> findProductWithMaxSolvedByYear(int year);
     Product createProductWithImages(ProductDTOWithImages productDTOWithImages);
     void deleteProduct(String id);
+    List<Product> search(String keyword);
 }

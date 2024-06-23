@@ -236,4 +236,19 @@ public class ProductController {
                 .build();
         return httpResponse;
     }
+
+    @PostMapping("/search")
+    public HttpResponse searchProduct(@RequestParam String keyword, HttpServletRequest httpServletRequest) {
+        List<Product> products = productService.search(keyword);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .statusCode(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getCode())
+                .message(ResponseStatus.GET_ALL_PRODUCTS_SUCCESSFULLY.getMessage())
+                .data(Map.of("products", products))
+                .build();
+        return httpResponse;
+    }
 }

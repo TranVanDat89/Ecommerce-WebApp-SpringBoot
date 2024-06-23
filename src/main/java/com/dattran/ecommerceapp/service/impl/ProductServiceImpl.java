@@ -222,4 +222,9 @@ public class ProductServiceImpl implements IProductService {
         product.setIsDeleted(true);
         productRepository.save(product);
     }
+
+    @Override
+    public List<Product> search(String keyword) {
+        return productRepository.search(keyword);
+    }
 }
