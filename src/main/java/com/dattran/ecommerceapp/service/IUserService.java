@@ -16,4 +16,5 @@ public interface IUserService {
     List<UserResponse> getAllUsers();
     long countTotalUsers();
     Map<String, ?> countTotalUsersByYear(int year);
+    void deleteUser(String userId, boolean isActive);
 }

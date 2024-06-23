@@ -91,4 +91,17 @@ public class UserController {
                 .build();
         return httpResponse;
     }
+
+    @DeleteMapping("/delete/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public HttpResponse deleteUser(@PathVariable String userId, @RequestParam boolean isActive, HttpServletRequest httpServletRequest) {
+        userService.deleteUser(userId, isActive);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .build();
+        return httpResponse;
+    }
 }

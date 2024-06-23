@@ -227,4 +227,19 @@ public class ProductServiceImpl implements IProductService {
     public List<Product> search(String keyword) {
         return productRepository.search(keyword);
     }
+
+    @Override
+    public void updateProduct(String id, ProductDTO productDTO) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new AppException(ResponseStatus.PRODUCT_NOT_FOUND));
+        product.setName(productDTO.getName());
+        product.setPrice(productDTO.getPrice());
+        product.setQuantity(productDTO.getQuantity());
+        product.setCategory(categoryRepository.findByName(productDTO.getCategoryName())
+                .orElseThrow(() -> new AppException(ResponseStatus.CATEGORY_NOT_FOUND)));
+        product.setIngredient(entityMapper.toIngredient(productDTO));
+        product.setProductDetail(entityMapper.toProductDetail(productDTO));
+        product.setIsDeleted(false);
+        productRepository.save(product);
+    }
 }

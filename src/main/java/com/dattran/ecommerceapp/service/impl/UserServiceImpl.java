@@ -158,4 +158,12 @@ public class UserServiceImpl implements IUserService {
         }
         return result;
     }
+
+    @Override
+    public void deleteUser(String userId, boolean isActive) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ResponseStatus.USER_NOT_FOUND));
+        user.setActive(isActive);
+        userRepository.save(user);
+    }
 }

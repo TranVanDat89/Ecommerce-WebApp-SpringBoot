@@ -251,4 +251,16 @@ public class ProductController {
                 .build();
         return httpResponse;
     }
+
+    @PutMapping("/update-product/{id}")
+    public HttpResponse updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO, HttpServletRequest httpServletRequest) {
+        productService.updateProduct(id, productDTO);
+        HttpResponse httpResponse = HttpResponse.builder()
+                .timeStamp(LocalDateTime.now().toString())
+                .path(httpServletRequest.getRequestURI())
+                .requestMethod(httpServletRequest.getMethod())
+                .status(HttpStatus.OK)
+                .build();
+        return httpResponse;
+    }
 }

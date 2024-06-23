@@ -31,4 +31,5 @@ public interface IProductService {
     Product createProductWithImages(ProductDTOWithImages productDTOWithImages);
     void deleteProduct(String id);
     List<Product> search(String keyword);
+    void updateProduct(String id, ProductDTO productDTO);
 }
