@@ -218,7 +218,7 @@ public class OrderServiceImpl implements IOrderService {
     public void cancelOrder(String orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppException(ResponseStatus.ORDER_NOT_FOUND));
-        order.setStatus(OrderStatus.CANCELLED.name());
+        order.setStatus("Cancelled");
         orderRepository.save(order);
     }
 
