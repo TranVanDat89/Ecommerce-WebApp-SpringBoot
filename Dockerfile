@@ -19,13 +19,23 @@
 #docker push sunlight4d/shopapp-spring:1.0.4
 
 # Which "official Java image"/ Ke thua tu image nao
-FROM openjdk:17-slim
+#FROM openjdk:17-slim
 # Working directory/ Thu muc lam viec
-WORKDIR /app
+#WORKDIR /app
 # Copy from host(Laptop, PC dev) to container
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-COPY src ./src
-# Run this inside image
-RUN ./mvnw dependency:go-offline
-CMD ["./mvnw", "spring-boot:run"]
+#COPY .mvn/ .mvn
+#COPY mvnw pom.xml ./
+#COPY src ./src
+## Run this inside image
+#RUN ./mvnw dependency:go-offline
+#CMD ["./mvnw", "spring-boot:run"]
+
+FROM maven:3.8.3-openjdk-17 AS buildstep
+WORKDIR /app
+COPY . .
+RUN mvn clean install
+
+FROM openjdk:17-slim
+COPY --from=buildstep /app/target/ecommerce-app-0.0.1-SNAPSHOT.jar /usr/share/myservice/
+ENTRYPOINT ["java", "-jar", "/usr/share/myservice/ecommerce-app-0.0.1-SNAPSHOT.jar"]
+EXPOSE 8080

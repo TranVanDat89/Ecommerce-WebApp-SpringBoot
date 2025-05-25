@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @PostMapping("/details")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse getUserDetails(
             @RequestHeader("Authorization") String authorizationHeader, HttpServletRequest httpServletRequest
     ) {
@@ -77,7 +77,7 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public HttpResponse getAllUsers(HttpServletRequest httpServletRequest) {
         List<UserResponse> userResponses = userService.getAllUsers();
         HttpResponse httpResponse = HttpResponse.builder()
@@ -93,7 +93,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{userId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public HttpResponse deleteUser(@PathVariable String userId, @RequestParam boolean isActive, HttpServletRequest httpServletRequest) {
         userService.deleteUser(userId, isActive);
         HttpResponse httpResponse = HttpResponse.builder()

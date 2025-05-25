@@ -75,7 +75,7 @@ public class CommentController {
         return httpResponse;
     }
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse getAllCommentsByUserId(@PathVariable String userId, HttpServletRequest httpServletRequest) {
         List<CommentResponse> comments = commentService.getAllCommentByUserId(userId);
         HttpResponse httpResponse = HttpResponse.builder()
@@ -91,7 +91,7 @@ public class CommentController {
     }
 
     @PostMapping("/create-list-comment")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     HttpResponse createComments(@RequestBody List<CommentDTO> commentDTOS, HttpServletRequest httpServletRequest) {
         List<Comment> comments = commentService.createListComment(commentDTOS);
         HttpResponse httpResponse = HttpResponse.builder()
@@ -105,7 +105,7 @@ public class CommentController {
         return httpResponse;
     }
     @PutMapping("/update-comment/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public HttpResponse updateComment(@PathVariable String id, @RequestBody @Valid CommentDTO commentDTO, HttpServletRequest httpServletRequest) {
         Comment comment = commentService.updateComment(id, commentDTO);
         HttpResponse httpResponse = HttpResponse.builder()
@@ -120,7 +120,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse deleteComment(@PathVariable String id, HttpServletRequest httpServletRequest) {
         commentService.deleteComment(id);
         HttpResponse httpResponse = HttpResponse.builder()

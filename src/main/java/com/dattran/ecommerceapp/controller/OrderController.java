@@ -34,7 +34,7 @@ public class OrderController {
     IOrderService orderService;
 
     @PostMapping("/create-order")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse createOrder(@RequestBody @Valid OrderDTO orderDTO, HttpServletRequest httpServletRequest) {
         User loggedInUser = securityUtil.getLoggedInUserInfor();
         if (orderDTO.getUserId() == null) {
@@ -53,7 +53,7 @@ public class OrderController {
         return httpResponse;
     }
     @GetMapping("/order-detail/{userId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse getOrderDetail(@PathVariable("userId") String userId, HttpServletRequest httpServletRequest) {
         List<OrderDetailResponse> orderDetails = orderService.getOrderDetailByUserId(userId);
         HttpResponse httpResponse = HttpResponse.builder()
@@ -69,7 +69,7 @@ public class OrderController {
     }
 
     @PostMapping("/update-status-order")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DELIVERY')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DELIVERY')")
     public HttpResponse updateStatusOrder(@RequestBody @Valid OrderStatusRequest orderStatusRequest, HttpServletRequest httpServletRequest) {
         Order order = orderService.updateStatusOrder(orderStatusRequest);
         HttpResponse httpResponse = HttpResponse.builder()

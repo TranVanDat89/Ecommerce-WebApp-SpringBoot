@@ -28,7 +28,7 @@ public class FavoriteController {
     SecurityUtil securityUtil;
     IProductService productService;
     @PostMapping("/favorite-products")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse getAllFavorites(HttpServletRequest httpServletRequest) throws Exception {
         User loggedUser = securityUtil.getLoggedInUserInfor();
         List<WishListResponse> wishLists = productService.getAllFavorites(loggedUser.getId());

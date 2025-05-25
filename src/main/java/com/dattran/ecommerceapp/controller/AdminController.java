@@ -32,7 +32,7 @@ public class AdminController {
     IUserService userService;
     IArticleService articleService;
     @GetMapping("/products")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public HttpResponse getAnalytics(HttpServletRequest httpServletRequest) {
         Map<String, Long> result = productService.countByCategory();
         HttpResponse httpResponse = HttpResponse.builder()
@@ -48,7 +48,7 @@ public class AdminController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public HttpResponse outComeOfSuccessfullyOrders(@RequestParam("year") int year, HttpServletRequest httpServletRequest) {
 //        Double outcome = orderService.calculateOutcomeOfSuccessfulOrders(year);
         Map<String, ?> outcome = orderService.calculateOutcomeOrders(year);
@@ -67,7 +67,7 @@ public class AdminController {
         return httpResponse;
     }
     @GetMapping("/outcome-by-month")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public HttpResponse getOutcomeByMonth(@RequestParam("year") int year, HttpServletRequest httpServletRequest) {
         Map<String, Double> result = orderService.getTotalMoneyByStatusAndYearGroupedByMonth(OrderStatus.SUCCESS.getName(), year);
         HttpResponse httpResponse = HttpResponse.builder()

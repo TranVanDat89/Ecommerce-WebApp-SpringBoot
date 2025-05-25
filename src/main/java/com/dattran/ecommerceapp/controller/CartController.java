@@ -27,7 +27,7 @@ public class CartController {
     ICartService cartService;
     SecurityUtil securityUtil;
     @PostMapping("/add-to-cart")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse addToCart(@RequestParam String productId, @RequestParam int quantity,
                                   @RequestParam String flavorName,
                                   HttpServletRequest httpServletRequest) {
@@ -50,7 +50,7 @@ public class CartController {
         return httpResponse;
     }
     @PostMapping("/update-cart/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse updateCart(@PathVariable("id") String cartId, @RequestBody List<CartRequest> cartUpdate, HttpServletRequest httpServletRequest) {
         CartDTO cart = cartService.updateCart(cartUpdate, cartId);
         HttpResponse httpResponse = HttpResponse.builder()
@@ -66,7 +66,7 @@ public class CartController {
     }
 
     @GetMapping("/my-cart")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse getCart(HttpServletRequest httpServletRequest) {
         User loggedUser = securityUtil.getLoggedInUserInfor();
         String userId = null;
@@ -86,7 +86,7 @@ public class CartController {
         return httpResponse;
     }
     @GetMapping("/delete-item")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse deleteCartItem(@RequestParam String productId, HttpServletRequest httpServletRequest) {
         User loggedUser = securityUtil.getLoggedInUserInfor();
         String userId = null;

@@ -38,7 +38,7 @@ public class ProductController {
     SecurityUtil securityUtil;
 
     @PostMapping("/create-product")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public HttpResponse createProduct(@RequestBody @Valid ProductDTO productDTO, HttpServletRequest httpServletRequest) {
         Product product = productService.createProduct(productDTO);
         HttpResponse httpResponse = HttpResponse.builder()
@@ -67,7 +67,7 @@ public class ProductController {
     }
 
     @PostMapping(value = "/upload-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public HttpResponse uploadImages(@RequestParam String productId, @ModelAttribute("files") List<MultipartFile> files, HttpServletRequest httpServletRequest) {
         List<ProductImage> productImages = productService.uploadImages(productId, files);
         HttpResponse httpResponse = HttpResponse.builder()
@@ -130,7 +130,7 @@ public class ProductController {
         return httpResponse;
     }
     @PostMapping("/product-detail/comment")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse createComment(@RequestBody @Valid CommentDTO commentDTO, HttpServletRequest httpServletRequest) {
         User loginUser = securityUtil.getLoggedInUserInfor();
         if(!Objects.equals(loginUser.getId(), commentDTO.getUserId())) {
@@ -165,7 +165,7 @@ public class ProductController {
     }
 
     @PostMapping("/add-to-wish-list/{productId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse addToWishList(@PathVariable String productId, HttpServletRequest httpServletRequest) throws Exception {
         User loggedUser = securityUtil.getLoggedInUserInfor();
         WishList wishList = productService.addToWishList(loggedUser.getId(), productId);
@@ -210,7 +210,7 @@ public class ProductController {
     }
 
     @GetMapping("/product-with-max-solved")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public HttpResponse getProductWithMaxSolvedByYear(@RequestParam int year, HttpServletRequest httpServletRequest) {
         List<Product> products = productService.findProductWithMaxSolvedByYear(year);
         HttpResponse httpResponse = HttpResponse.builder()

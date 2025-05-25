@@ -29,7 +29,7 @@ public class NotificationController {
     INotificationService notificationService;
     SecurityUtil securityUtil;
     @GetMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_DELIVERY')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_DELIVERY')")
     public HttpResponse getNotificationByUserId(HttpServletRequest httpServletRequest) {
         User loggedInUser = securityUtil.getLoggedInUserInfor();
         List<Notification> notifications = notificationService.getNotificationByUserId(loggedInUser.getId());
