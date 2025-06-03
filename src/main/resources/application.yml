@@ -4,9 +4,9 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://final-project-db-test.cbu2iq0eygt0.ap-southeast-2.rds.amazonaws.com:3306/ecommerce_app}
-    username: ${MYSQL_USERNAME:admin}
-    password: ${MYSQL_ROOT_PASSWORD:tranvandat12@}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://cicd-database.cbu2iq0eygt0.ap-southeast-2.rds.amazonaws.com:3306/ecommerce_app}
+    username: ${MYSQL_USERNAME:tranvandat}
+    password: ${MYSQL_ROOT_PASSWORD:tranvandat12}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:

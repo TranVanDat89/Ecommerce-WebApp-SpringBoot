@@ -29,6 +29,7 @@ public class SecurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
     private final String[] PUBLIC_ENDPOINTS = {
             "/api/v1/users/auth/register",
+            "/api/v1/test/**",
             "/api/v1/users/auth/login",
             "/api/v1/products/**",
             "/api/v1/categories",
