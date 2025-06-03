@@ -127,4 +127,9 @@ public class TestSystemController {
 
         return ResponseEntity.ok(status);
     }
+
+    @GetMapping("/cicd")
+    public String testCiCd() {
+        return "Test CICD Success";
+    }
 }
